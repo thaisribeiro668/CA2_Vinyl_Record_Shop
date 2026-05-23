@@ -13,19 +13,17 @@
 
     <!-- Navigation area -->
     <nav>
-  <!-- <div class="nav-logo">Groove<span>&</span>Grain</div> -->
-
   <!-- Navigation Links -->
   <div class="nav-center">
-    <div class="nav-logo">Groove<span>&</span>Grain</div>
     <ul class="nav-links">
       <li><a href="#">Shop</a></li>
       <li><a href="#">Genres</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">New Arrivals</a></li>
     </ul>
-  </div>
     
+  </div>
+
   <!-- Shopping Cart -->
  
     <button class="cart-btn" onclick="toggleCart()">
@@ -37,8 +35,10 @@
 
     <main>
     <section class="hero">
+        
  <!-- Big vinyl cropped at top -->
   <div class="hero-vinyl-wrap">
+    
     <svg class="vinyl-spin" width="520" height="520" viewBox="0 0 260 260">
       <!-- Grooves -->
       <circle cx="130" cy="130" r="128" fill="#111"/>
@@ -66,9 +66,11 @@
   </div>
 
     <!-- VINYL   SHOP wordmark flanking the record -->
-  <div class="hero-wordmark">
+
+    <div class="hero-wordmark">
     <span class="hero-word">Vinyl</span>
     <span class="hero-word">Shop</span>
+      <div class="hero-logo">Groove<span>&</span>Grain</div>
   </div>
 
   <!-- Subtitle + CTA at bottom -->
@@ -79,22 +81,6 @@
   </button>
 </div>
 </section>
-
-
-<!-- Cart -->
- <aside class="cart-sidebar">
-<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-<div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header">
-    <h2>Your Cart</h2>
-    <button class="close-btn" onclick="toggleCart()" aria-label="Close cart"><i class="ti ti-x"></i></button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty">
-      <i class="ti ti-vinyl" aria-hidden="true" class="cart-empty-icon" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
-      <p>your cart is empty</p>
-    </div>
-  </div>
 
 <!-- Top Filters -->
 <section class="filters">
@@ -122,6 +108,21 @@
   </div>
   <div class="product-grid" id="productGrid"></div>
 </section>
+
+<!-- Cart -->
+ <aside class="cart-sidebar">
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2>Your Cart</h2>
+    <button class="close-btn" onclick="toggleCart()" aria-label="Close cart"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <i class="ti ti-vinyl" aria-hidden="true" class="cart-empty-icon" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
+      <p>your cart is empty</p>
+    </div>
+  </div>
 
 <!-- Cart Footer -->
   <div class="cart-footer">
