@@ -117,6 +117,311 @@ nav {
     font-weight:700
 }
 
-.creatingCommitToGithub {
-    /* trying to link works */
+/* Hero Section */
+.hero {
+    position:relative;
+    overflow:hidden;
+    background:var(--cream);
+    border-bottom:1px solid var(--border);
+    min-height:480px
 }
+
+.hero-vinyl-wrap {
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding-top:0
+}
+
+.hero-vinyl-wrap svg {
+    display:block;
+    margin:0 auto;
+    transform:translateY(-38%);
+    filter:drop-shadow(0 20px 60px rgba(0,0,0,.45))
+}
+
+/* Spin loop animation */
+@keyframes spin {
+    /* Move the element up by 38%, rotate it 0 degrees */
+    from{transform:translateY(-38%) rotate(0deg)}
+    /* Move the element up by 38%, rotate it 360 degrees */
+    to{transform:translateY(-38%) rotate(360deg)}
+}
+
+/* Applying the animation to the class */
+.vinyl-spin {
+    animation:spin 10s linear infinite
+}
+
+/* Stopping the vynil when hovered */
+.vinyl-spin:hover {
+    animation-play-state:paused
+}
+
+.hero-wordmark { position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    padding:0 2.5rem;
+    height:60%;
+    /* Element becomes unclickable, unhoverable, and transparent to the mouse */
+    pointer-events:none;
+}
+
+.hero-word {
+    font-family:'DM Sans',sans-serif;
+    /* Making text automatically resize depending on the screen size */
+    font-size:clamp(4rem,10vw,8rem);
+    font-weight:900;
+    letter-spacing:-.02em;
+    color:var(--red);
+    line-height:1;
+    text-transform:uppercase;
+    align-self:flex-end
+}
+
+.hero-bottom {
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-bottom:2.5rem;
+    gap:1rem;
+    text-align:center
+}
+
+.hero-sub {
+    font-family:'DM Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--ink);
+    line-height:1.7
+}
+
+.hero-cta {
+    display:inline-flex;
+    align-items:center;
+    gap:.75rem;
+    background:var(--red);
+    color:#fff;
+    padding:.7rem 2rem;
+    text-decoration:none;
+    font-size:.75rem;
+    font-weight:500;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    cursor:pointer;
+    border:none;
+    font-family:'DM Sans',sans-serif;
+    transition:background .2s;
+}
+
+.hero-cta:hover {
+    background:var(--ink);
+}
+
+/* CART SIDEBAR */
+.cart-overlay {
+    position:fixed;
+    inset:0;
+    background:rgba(26,22,18,.5);
+    z-index:200;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s
+}
+
+/* Selecting the element that has both classes */
+.cart-overlay.open {    
+    opacity:1;
+    pointer-events:all
+}
+
+.cart-sidebar {
+    position:fixed;
+    right:0;
+    top:0;
+    bottom:0;
+    width:360px;
+    background:var(--cream);
+    z-index:201;
+    transform:translateX(100%);
+    transition:transform .3s;
+    display:flex;
+    flex-direction:column;
+    border-left:1px solid var(--border)
+}
+
+.cart-sidebar.open {
+    transform:translateX(0)
+}
+
+.cart-header {
+    padding:1.5rem;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between
+}
+
+.cart-header h2 {
+    font-family:'Playfair Display',serif;
+    font-size:1.3rem
+}
+
+.close-btn {
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:1.3rem;
+    color:var(--warm-gray);
+    line-height:1
+}
+
+.cart-items {
+    flex:1;
+    overflow-y:auto;
+    padding:1rem 1.5rem
+}
+
+.cart-empty {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100%;
+    gap:1rem;
+    color:var(--warm-gray)
+}
+
+.cart-empty-icon {
+    font-size:2.5rem;
+    opacity:.4
+}
+
+.cart-empty p {
+    font-family:'DM Mono',monospace;
+    font-size:.75rem;
+    letter-spacing:.1em
+}
+
+.cart-item {
+    display:flex;
+    gap:1rem;
+    padding:.9rem 0;
+    border-bottom:1px solid var(--border);
+}
+
+.cart-item-thumb {
+    width:52px;
+    height:52px;
+    background:var(--ink);
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.cart-item-info {
+    /* Grow to fill available space */
+    flex:1;
+}
+
+/* Will be managed by JS */
+.cart-item-title {
+    font-family:'Playfair Display',serif;
+    font-size:.9rem;
+    margin-bottom:.15rem
+}
+
+.cart-item-artist {
+    font-size:.75rem;
+    color:var(--warm-gray)
+}
+
+.cart-item-price {
+    font-family:'DM Mono',monospace;
+    font-size:.85rem;
+    margin-top:.3rem
+}
+
+.cart-item-remove {
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--warm-gray);
+    font-size:.85rem;
+    padding:.2rem;
+    transition:color .15s;
+}
+
+.cart-item-remove:hover {
+    color:var(--red);
+}
+
+.cart-footer {
+    padding:1.5rem;
+    border-top:1px solid var(--border);
+}
+
+.cart-total-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:1.25rem;
+}
+
+.cart-total-label {
+    font-family:'DM Mono',monospace;
+    font-size:.7rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--warm-gray)
+}
+
+.cart-total-val {
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem}
+
+.checkout-btn {
+    width:100%;
+    background:var(--ink);
+    color:var(--cream);
+    border:none;
+    padding:.9rem;
+    font-family:'DM Sans',sans-serif;
+    font-size:.8rem;
+    font-weight:500;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:background .2s;
+    margin-bottom:.5rem;
+}
+
+.checkout-btn:hover {
+    background:var(--red)
+}
+
+.continue-btn {
+    width:100%;
+    background:none;
+    color:var(--warm-gray);
+    border:none;
+    padding:.5rem;
+    font-family:'DM Sans',sans-serif;
+    font-size:.75rem;
+    cursor:pointer;
+    text-decoration:underline
+}
+
+
+
+
