@@ -13,24 +13,25 @@
 
     <!-- Navigation area -->
     <nav>
-        <div class="hero">
-  <div class="nav-logo">Groove<span>&</span>Grain</div>
-  <ul class="nav-links">
-    <li><a href="#">Shop</a></li>
-    <li><a href="#">New Arrivals</a></li>
-    <li><a href="#">Genres</a></li>
-    <li><a href="#">About</a></li>
-  </ul>
+  <!-- <div class="nav-logo">Groove<span>&</span>Grain</div> -->
 
-<div class="nav-center"></div>
-<!-- Shopping Cart -->
-    <div class="nav-right">
-         <button class="cart-btn" onclick="toggleCart()">
-            <!-- Icon -->
-      <i class="ti ti-shopping-bag" aria-hidden="true"></i> Cart
+  <!-- Navigation Links -->
+  <div class="nav-center">
+    <div class="nav-logo">Groove<span>&</span>Grain</div>
+    <ul class="nav-links">
+      <li><a href="#">Shop</a></li>
+      <li><a href="#">Genres</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">New Arrivals</a></li>
+    </ul>
+  </div>
+    
+  <!-- Shopping Cart -->
+ 
+    <button class="cart-btn" onclick="toggleCart()">
+      <i class="ti ti-shopping-bag"></i> Cart
       <span class="cart-count" id="cartCount">0</span>
     </button>
-    </div>
   </nav>    
 </header>
 
@@ -59,6 +60,8 @@
       <!-- Spindle -->
       <circle cx="130" cy="130" r="5" fill="#2a2520"/>
       <circle cx="130" cy="130" r="2.5" fill="#888"/>
+     <!-- Rotation marker (this makes the spin visible) -->
+  <rect x="129" y="2" width="2" height="20" fill="#fff"/>    
     </svg>
   </div>
 
@@ -77,33 +80,6 @@
 </div>
 </section>
 
-<!-- Top Filters -->
-<section class="filters">
-  <span class="filter-label">Genre:</span>
-  <button class="filter-btn active" data-genre="all" onclick="filterGenre(this)">All</button>
-  <button class="filter-btn" data-genre="Jazz" onclick="filterGenre(this)">Jazz</button>
-  <button class="filter-btn" data-genre="Rock" onclick="filterGenre(this)">Rock</button>
-  <button class="filter-btn" data-genre="Soul" onclick="filterGenre(this)">Soul</button>
-  <button class="filter-btn" data-genre="Electronic" onclick="filterGenre(this)">Electronic</button>
-  <button class="filter-btn" data-genre="Classical" onclick="filterGenre(this)">Classical</button>
-  
-  <!-- Search box -->
-<div class="search-wrap">
-    <i class="ti ti-search search-icon" aria-hidden="true"></i>
-    <input type="text" placeholder="Search records…" oninput="searchRecords(this.value)">
-  </div>
-</div>
-
-</section>
-
-<!-- Shop section with product grid -->
-<section class="shop-section">
-  <div class="section-header">
-    <h2 class="section-title">The Collection</h2>
-    <span class="result-count" id="resultCount">12 records</span>
-  </div>
-  <div class="product-grid" id="productGrid"></div>
-</section>
 
 <!-- Cart -->
  <aside class="cart-sidebar">
@@ -119,6 +95,33 @@
       <p>your cart is empty</p>
     </div>
   </div>
+
+<!-- Top Filters -->
+<section class="filters">
+  <span class="filter-label">Genre:</span>
+  <button class="filter-btn active" data-genre="all" onclick="filterGenre(this)">All</button>
+  <button class="filter-btn" data-genre="Jazz" onclick="filterGenre(this)">Jazz</button>
+  <button class="filter-btn" data-genre="Rock" onclick="filterGenre(this)">Rock</button>
+  <button class="filter-btn" data-genre="Soul" onclick="filterGenre(this)">Soul</button>
+  <button class="filter-btn" data-genre="Electronic" onclick="filterGenre(this)">Electronic</button>
+  <button class="filter-btn" data-genre="Classical" onclick="filterGenre(this)">Classical</button>
+  
+  <!-- Search box -->
+<div class="search-wrap">
+    <i class="ti ti-search search-icon" aria-hidden="true"></i>
+    <input type="text" placeholder="Search records…" oninput="searchRecords(this.value)">
+  </div>
+
+</section>
+
+<!-- Shop section with product grid -->
+<section class="shop-section">
+  <div class="section-header">
+    <h2 class="section-title">The Collection</h2>
+    <span class="result-count" id="resultCount">12 records</span>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
 
 <!-- Cart Footer -->
   <div class="cart-footer">
