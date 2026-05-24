@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vinyl Record Shop</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <header>
@@ -106,17 +107,20 @@
     <h2 class="section-title">The Collection</h2>
     <span class="result-count" id="resultCount">12 records</span>
   </div>
+  <!-- Product grid will show up here according to filters -->
   <div class="product-grid" id="productGrid"></div>
 </section>
 
 <!-- Cart -->
- <aside class="cart-sidebar">
-<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-<div class="cart-sidebar" id="cartSidebar">
+ <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+ 
+ <aside class="cart-sidebar" id="cartSidebar">
   <div class="cart-header">
     <h2>Your Cart</h2>
-    <button class="close-btn" onclick="toggleCart()" aria-label="Close cart"><i class="ti ti-x"></i></button>
+    <button class="close-btn" onclick="toggleCart()" aria-label="Close cart">
+      <i class="ti ti-x"></i></button>
   </div>
+
   <div class="cart-items" id="cartItems">
     <div class="cart-empty">
       <i class="ti ti-vinyl" aria-hidden="true" class="cart-empty-icon" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
