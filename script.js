@@ -3,6 +3,19 @@ let cart = [];
 let currentGenre = 'all';
 let currentSearch = '';
 
+async function loadProducts() {
+    try {
+        const response = await fetch("http://localhost:3000/products");
+        products = await response.json();
+        displayProducts();
+    }
+
+    catch (error) {
+        console.error("Error loading products:", error);
+    }}
+
+    loadProducts();
+
 function displayProducts() {
   try {
     const grid = document.getElementById("productGrid");
@@ -19,7 +32,7 @@ function displayProducts() {
         const inCart = cart.find(item => item.id === product.id);
         return `<div class="product-card${show ? '' : ' hidden'}" id= card-${product.id}>
         <div class="card-img">
-           <p>Coming soon form an api</p>
+           <img src="${product.image}" alt="${product.title} cover">
         </div>
         <div class="card-body">
           <p class="card-genre">${product.genre}</p>
@@ -27,6 +40,7 @@ function displayProducts() {
           <p class="card-artist">${product.artist}</p>
           <div class="card-footer">
            <span class="card-price">€${Number(product.price).toFixed(2)}</span>
+           
            <button class="add-btn"${inCart ? ' added' : ''}" id="btn-${product.id}" onclick="addToCart(${product.id})">
            ${inCart ? 'Added' : 'Add'}
               </button>
@@ -42,19 +56,6 @@ function displayProducts() {
   }
 }
 
-
-async function loadProducts() {
-    try {
-        const response = await fetch("http://localhost:3000/products");
-        products = await response.json();
-        displayProducts();
-    }
-
-    catch (error) {
-        console.error("Error loading products:", error);
-    }}
-
-    loadProducts();
 
     function filterGenre(button) {
         // Remove active class from all buttons and add to the clicked button
@@ -136,12 +137,19 @@ console.log("Trying to add ID:", id);
     function updateCart() {
   try {
     const count = cart.length;
+    // Header cart button
     document.getElementById('cartCount').textContent = count;
+
+    // Filters cart button
+    const filterCount = document.getElementById('cartCountFilter');
+    // Update the filter cart count if the element exists 
+    if (filterCount) filterCount.textContent = count;
 
     // Calculate total safely
     const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
     document.getElementById('cartTotal').textContent = '€' + total.toFixed(2);
 
+    
     const element = document.getElementById('cartItems');
 
     if (cart.length === 0) {

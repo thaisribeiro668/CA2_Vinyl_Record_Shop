@@ -27,6 +27,15 @@ UPDATE products
 SET genre = 'Rock'
 WHERE id = 12;
 
+USE vinyl_store;
+
+ALTER TABLE products
+ADD COLUMN badge VARCHAR(255);
+
+ALTER TABLE products ADD COLUMN image_url VARCHAR(500);
+
+
+
 
 UPDATE products
 SET genre = 'Rock'
