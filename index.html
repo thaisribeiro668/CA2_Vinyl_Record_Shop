@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vinyl Record Shop</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <script src="script.js" defer></script>
 </head>
 <body>
@@ -36,11 +37,10 @@
 
     <main>
     <section class="hero">
-        
  <!-- Big vinyl cropped at top -->
   <div class="hero-vinyl-wrap">
     
-    <svg class="vinyl-spin" width="520" height="520" viewBox="0 0 260 260">
+    <svg class="vinyl-spin" width="500" height="500" viewBox="0 0 260 260">
       <!-- Grooves -->
       <circle cx="130" cy="130" r="128" fill="#111"/>
       <circle cx="130" cy="130" r="122" fill="none" stroke="#1e1e1e" stroke-width="1.2"/>
@@ -99,6 +99,11 @@
     <input type="text" placeholder="Search records…" oninput="searchRecords(this.value)">
   </div>
 
+  <!-- Cart button -->
+    <button class="cart-btn-filter" onclick="toggleCart()">
+      <i class="ti ti-shopping-bag"></i> Cart
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
 </section>
 
 <!-- Shop section with product grid -->
@@ -118,7 +123,8 @@
   <div class="cart-header">
     <h2>Your Cart</h2>
     <button class="close-btn" onclick="toggleCart()" aria-label="Close cart">
-      <i class="ti ti-x"></i></button>
+      <i class="ti ti-x"></i>
+</button>
   </div>
 
   <div class="cart-items" id="cartItems">

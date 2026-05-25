@@ -4,6 +4,7 @@ let currentGenre = 'all';
 let currentSearch = '';
 
 function displayProducts() {
+  try {
     const grid = document.getElementById("productGrid");
     //Variable to track how many products are visible after filtering
     let visible = 0;
@@ -25,7 +26,7 @@ function displayProducts() {
           <h3 class="card-title">${product.title}</h3>
           <p class="card-artist">${product.artist}</p>
           <div class="card-footer">
-           <span class="card-price">£${product.price}</span>
+           <span class="card-price">€${Number(product.price).toFixed(2)}</span>
            <button class="add-btn"${inCart ? ' added' : ''}" id="btn-${product.id}" onclick="addToCart(${product.id})">
            ${inCart ? 'Added' : 'Add'}
               </button>
@@ -35,7 +36,12 @@ function displayProducts() {
     }).join('');
     //combines all the mapped HTML snippets into one big string so they render correctly inside your cart container.
     document.getElementById('resultCount').textContent = visible + ' record'+(visible !==1 ? 's' : '');          
+  } catch (error) {
+    console.error("Error displaying products:", error);
+    showToast("Something went wrong while displaying products.");
+  }
 }
+
 
 async function loadProducts() {
     try {
@@ -79,20 +85,40 @@ async function loadProducts() {
         setTimeout(() => toast.classList.remove('show'), 2200);
         }; 
 
-    function addToCart(productId) {
-        // Find the product by ID and add it to the cart if it's not already there
-        const product = products.find (p => p.id === productId);
-        // Check if the product is already in the cart to prevent duplicates
-        if (!cart.find(item => item.id === productId)) {
-            // Add the product to the cart with an initial quantity of 1
-            cart.push({...product, quantity: 1}); 
-            // Update the button to indicate the product has been added
-            document.getElementById('btn-' + productId).textContent='Added';
-            document.getElementById('btn-' + productId).classList.add('added');
-            updateCart();
-            showToast('"' + product.title + '" added to cart');
-        }
+    function addToCart(id){
+  try {
+    // Check if products array is empty
+    if (!products || products.length === 0) {
+      console.warn("Products list is empty — cannot add item to cart yet.");
+      showToast("Products are still loading. Please try again in a moment.");
+      return;
     }
+  
+    // Find the product by ID
+  const product = products.find(prod=>prod.id===id);
+ 
+    if (!product) {
+      console.error("Product not found:", id);
+      showToast("This product could not be found.");
+      return;
+    }
+ 
+    // Add to cart if not already there
+  if(!cart.find(prod=>prod.id===id)){
+    cart.push({...product, qty:1});
+    document.getElementById('btn-'+id).textContent='Added';
+    document.getElementById('btn-'+id).classList.add('added');
+    updateCart();
+    showToast('"'+ product.title + '" added to cart');
+  }
+} catch (error) {
+    console.error("Error adding product to cart:", error);
+    showToast("Something went wrong while adding to cart.");
+  }
+  console.log("Products array:", products);
+console.log("Trying to add ID:", id);
+}
+
 
     function removeFromCart(productId) {
         // Remove the product from the cart by filtering it out
@@ -108,32 +134,41 @@ async function loadProducts() {
     }
 
     function updateCart() {
-        const count = cart.length;
-        document.getElementById('cartCount').textContent = count;
-        const total = cart.reduce ((sum, item) => sum + item.price, 0);
-        document.getElementById('cartTotal').textContent = '€'+total.toFixed(2);
-        const element = document.getElementById('cartItems');
-        if (cart.length === 0) {
-            element.innerHTML = `<div class="cart-empty">
-            <i class="ti ti-disc" style="font-size:2.5rem;
-            opacity:.3;
-            color:var(--warm-gray)" 
-            aria-hidden="true">
-            </i><p>Your cart is empty</p></div>`;
-        } else {
-            element.innerHTML = cart.map (item => `<div class="cart-item">
-        <div class="cart-item-info">
-          <p class="cart-item-title">${item.title}</p>
-          <p class="cart-item-artist">${item.artist}</p>
-          <p class="cart-item-price">€${item.price}</p>
+  try {
+    const count = cart.length;
+    document.getElementById('cartCount').textContent = count;
+
+    // Calculate total safely
+    const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+    document.getElementById('cartTotal').textContent = '€' + total.toFixed(2);
+
+    const element = document.getElementById('cartItems');
+
+    if (cart.length === 0) {
+      element.innerHTML = `<div class="cart-empty">
+        <i class="ti ti-disc" style="font-size:2.5rem; opacity:.3; color:var(--warm-gray)" aria-hidden="true"></i>
+        <p>Your cart is empty</p>
+      </div>`;
+    } else {
+      element.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <p class="cart-item-title">${item.title}</p>
+            <p class="cart-item-artist">${item.artist}</p>
+            <p class="cart-item-price">€${Number(item.price).toFixed(2)}</p>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart(${item.id})" aria-label="Remove ${item.title}">
+            <i class="ti ti-trash"></i>
+          </button>
         </div>
-        <button class="cart-item-remove" onclick="removeFromCart(${item.id})" 
-        aria-label="Remove ${item.title}">
-        <i class="ti ti-x"></i>
-        </button>
-      </div>`).join('');
-        }
+      `).join('');
     }
+
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    showToast("Something went wrong while updating your cart.");
+  }
+}
 
     displayProducts();
     updateCart();

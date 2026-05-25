@@ -196,7 +196,8 @@ nav {
 .hero-word {
     font-family:'DM Sans',sans-serif;
     /* Making text automatically resize depending on the screen size */
-    font-size:clamp(4rem,10vw,8rem);
+    /* Use a font size that scales with the screen width, but never smaller than 4rem and never larger than 8rem. */
+    font-size:clamp(3rem,10vw,7rem);
     font-weight:900;
     letter-spacing:-.02em;
     color:var(--red);
@@ -219,7 +220,7 @@ nav {
 
 .hero-bottom {
     position:absolute;
-    bottom:0;
+    bottom:1rem;
     left:0;
     right:0;
     display:flex;
@@ -458,6 +459,10 @@ nav {
 
 /* FILTERS */
 .filters {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--cream);
     padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -523,6 +528,28 @@ nav {
     transform: translateY(-50%);
     color: var(--warm-gray);
     font-size: 14px;
+}
+
+.cart-btn-filter {
+    background:var(--ink);
+    color:var(--cream);
+    border:none;
+    padding:.35rem .9rem .35rem 1rem;
+    font-family:'DM Sans',sans-serif;
+    font-size:.75rem;
+    font-weight:500;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    /* Animate background smoothly over 2 secs changing its colour*/
+    transition:background .2s
+}
+
+.cart-btn-filter:hover {
+    background:var(--red)
 }
 
 /* PRODUCTS SESSION */
