@@ -28,8 +28,8 @@ db.connect(err => {
   console.log("MySQL connected");
 });
 
-// Apple Music API call for album covers
-async function getAppleAlbumCover(artist, album) {
+// Apple Music API call for album data
+async function getAppleAlbumData(artist, album) {
   try {
   const query = encodeURIComponent(`${artist} ${album}`);
   const url = `https://itunes.apple.com/search?term=${query}&entity=album&limit=1`;
@@ -38,23 +38,39 @@ async function getAppleAlbumCover(artist, album) {
 
   if (!response.ok) {
     console.error("Apple Music API error:", response.status, response.statusText);
-    return null;
-}
+   return {
+        image: "/images/fallback-cover.png",
+        marketPrice: null,
+        releaseDate: null
+      };
+    }
 
   const data = await response.json();
   console.log("Apple API response for:", artist, album, data);
 
-  if (data.results.length > 0) {
-    // Apple returns 100x100 by default — replace with 600x600
-    return data.results[0].artworkUrl100.replace('100x100', '600x600');
-    // return data.results[0].price;
-  }
+  if (data.results.length === 0) {
+    return {
+        image: "/images/fallback-cover.png",
+        marketPrice: null,
+        releaseDate: null
+      };
+    }
+  
+const result = data.results[0];
 
-  // No results found → fallback
-  return "/images/fallback-cover.png";
+return {
+      image: result.artworkUrl100.replace("100x100", "600x600"),
+      marketPrice: result.collectionPrice || null,
+      releaseDate: result.releaseDate || null
+    };
+
 } catch (error) {
-console.error("Error fetching Apple album cover:", error);
-    return "/images/fallback-cover.png";
+console.error("Error fetching Apple album data:", error);
+    return {
+      image: "/images/fallback-cover.png",
+      marketPrice: null,
+      releaseDate: null
+    };
 }
 }
 
@@ -63,17 +79,17 @@ console.error("Error fetching Apple album cover:", error);
 app.get('/products', async (req, res) => {
   try {
     // Use promise-based query to fetch products from the database: without promise(), await simply won’t work.
-    const [rows] = await db.promise().query("SELECT * FROM products");
+    const [productsFromDB] = await db.promise().query("SELECT * FROM products");
 
-    const enriched = await Promise.all(
-      rows.map(async (product) => {
+    const completeProducts = await Promise.all(
+      productsFromDB.map(async (product) => {
         // If cached, use database image URL
         if (product.image_url) {
           return { ...product, image: product.image_url };
         }
 
         // If not cached, fetch image from Apple API
-        const cover = await getAppleAlbumCover(product.artist, product.title);
+        const cover = await getAppleAlbumData(product.artist, product.title);
 
         // Save the image to the database for next time
         await db.promise().query(
@@ -83,8 +99,8 @@ app.get('/products', async (req, res) => {
           return { ...product, image: cover };
       }));
 
-    res.json(enriched);
-    
+    res.json(completeProducts);
+
   } catch (err) {
     console.error("Error fetching products:", err);
     res.status(500).json({ error: "Failed to load products" });
@@ -92,11 +108,33 @@ app.get('/products', async (req, res) => {
 });
 
 // GETTING A SINGLE PRODUCT BY ID
-app.get("/products/:id", (req, res) => {
-  db.query("SELECT * FROM products WHERE id = ?", [req.params.id], (err, results) => {
-    if (err) throw err;
-    res.json(results[0]);
-  });
+app.get("/products/:id", async(req, res) => {
+   try {
+    const [productsFromDB] = await db.promise().query(
+      "SELECT * FROM products WHERE id = ?",
+      [req.params.id]
+    );
+
+const product = productsFromDB[0];
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+const appleData = await getAppleAlbumData(product.artist, product.title);
+
+const fullProduct = {
+      ...product,
+      image: appleData.image,
+      marketPrice: appleData.marketPrice,
+      releaseDate: appleData.releaseDate
+    };
+
+    res.json(fullProduct);
+
+    } catch (err) {
+    console.error("Error fetching product:", err);
+    res.status(500).json({ error: "Failed to load product" });
+  }
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));

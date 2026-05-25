@@ -619,17 +619,31 @@ nav {
     transform: scale(1.04);
 }
 
-.badge {
-    position: absolute;
-    top: .5rem;
-    left: .5rem;
-    background: var(--red);
-    color: #fff;
-    font-family: 'DM Mono', monospace;
-    font-size: .6rem;
-    letter-spacing: .08em;
-    padding: .2rem .5rem;
-    text-transform: uppercase;
+.card-img img {
+   width: 100%;
+  height: 100%;
+  object-fit: contain;   /* shows the entire image */
+  background-color: var(--ink); /* optional: fills empty space with your dark tone */
+}
+
+.hover-hint {
+  position: absolute;
+  bottom: .6rem;
+  right: .6rem;
+  background: rgba(26, 22, 18, 0.7); /* your --ink with opacity */
+  color: var(--cream);
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .1em;
+  padding: .25rem .5rem;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity .2s ease;
+  pointer-events: none; /* keeps the link clickable */
+}
+
+.card-img:hover .hover-hint {
+  opacity: 1;
 }
 
 .card-body {
@@ -720,10 +734,12 @@ nav {
 }
 
 .footer-body {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1.6fr;
-    gap: 3rem;
-    padding: 3.5rem 3rem;
+  display: flex;
+  justify-content: space-between;   /* spreads columns evenly */
+  align-items: flex-start;
+  gap: clamp(2rem, 8vw, 12rem);     /* responsive spacing */
+  padding: 3.5rem 3rem;
+  flex-wrap: wrap;                  /* allows wrapping on small screens */
 }
 
 .footer-logo {
@@ -896,3 +912,96 @@ nav {
 .toast.show {
     transform: translateX(-50%) translateY(0);
 }
+
+
+/* PRODUCTS PAGE STYLES */
+main.product-page-detail {
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  padding: 3rem 2rem;
+}
+
+#product-page-Detail {
+   width: 100%;
+  max-width: 960px;  
+}
+
+.product-detail-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  gap: 2.5rem;
+  align-items: flex-start;
+  max-width: 960px;        
+   margin-left: 10rem;
+}
+
+.product-detail-image img {
+  width: 100%;
+  max-width: 420px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  background: var(--ink);
+}
+
+.product-detail-info h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: .5rem;
+}
+
+.detail-artist {
+  color: var(--warm-gray);
+  margin-bottom: 1rem;
+}
+
+.detail-genre,
+.detail-price,
+.detail-market-price,
+.detail-release {
+  margin-bottom: .5rem;
+  font-size: .9rem;
+}
+
+.detail-badge {
+  font-size: .9rem;              /* same as genre line */
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  margin-bottom: .5rem;          /* same vertical rhythm */
+}
+
+.detail-badge span {
+  display: inline-block;
+  background: var(--red);
+  color: var(--cream);
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;              /* smaller text inside badge */
+  letter-spacing: .12em;
+  padding: .25rem .6rem;
+  text-transform: uppercase;
+  border-radius: 4px;
+  margin-left: .4rem;
+}
+
+.return-btn {
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  padding: .45rem 1.1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 1rem;
+  transition: background .2s;
+}
+
+.return-btn:hover {
+  background: var(--red);
+}
+

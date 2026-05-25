@@ -34,9 +34,46 @@ ADD COLUMN badge VARCHAR(255);
 
 ALTER TABLE products ADD COLUMN image_url VARCHAR(500);
 
-
-
+SELECT * FROM products;
 
 UPDATE products
 SET genre = 'Rock'
 WHERE artist = 'Elvis Presley';
+
+UPDATE products SET badge = 'Classic' WHERE id = 1;
+UPDATE products SET badge = 'New'     WHERE id = 2;
+UPDATE products SET badge = 'Hot'     WHERE id = 3;
+UPDATE products SET badge = 'Limited' WHERE id = 4;
+UPDATE products SET badge = 'Classic' WHERE id = 5;
+UPDATE products SET badge = 'Hot'     WHERE id = 6;
+UPDATE products SET badge = 'Limited' WHERE id = 7;
+UPDATE products SET badge = 'Classic' WHERE id = 8;
+UPDATE products SET badge = 'New'     WHERE id = 9;
+UPDATE products SET badge = 'New'     WHERE id = 10;
+UPDATE products SET badge = 'Hot'     WHERE id = 11;
+UPDATE products SET badge = 'Limited' WHERE id = 12;
+
+SELECT * FROM products;
+
+SHOW CREATE TABLE products;
+
+UPDATE products SET badge = 'TestBadge' WHERE id = 1;
+SELECT id, badge FROM products WHERE id = 1;
+DESCRIBE products;
+
+UPDATE products SET badge = 'Classic' WHERE id = 1;
+UPDATE products SET badge = 'New'     WHERE id = 2;
+UPDATE products SET badge = 'Hot'     WHERE id = 3;
+UPDATE products SET badge = 'Limited' WHERE id = 4;
+UPDATE products SET badge = 'Classic' WHERE id = 5;
+UPDATE products SET badge = 'Hot'     WHERE id = 6;
+UPDATE products SET badge = 'Limited' WHERE id = 7;
+UPDATE products SET badge = 'Classic' WHERE id = 8;
+UPDATE products SET badge = 'New'     WHERE id = 9;
+UPDATE products SET badge = 'New'     WHERE id = 10;
+UPDATE products SET badge = 'Hot'     WHERE id = 11;
+UPDATE products SET badge = 'Limited' WHERE id = 12;
+
+SELECT id, title, badge FROM products;
+
+UPDATE products SET badge = 'Classic' WHERE id = 13;

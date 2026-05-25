@@ -32,7 +32,10 @@ function displayProducts() {
         const inCart = cart.find(item => item.id === product.id);
         return `<div class="product-card${show ? '' : ' hidden'}" id= card-${product.id}>
         <div class="card-img">
+           <a href="product.html?id=${product.id}">
            <img src="${product.image}" alt="${product.title} cover">
+        <span class="hover-hint">Click for details</span>
+           </a> 
         </div>
         <div class="card-body">
           <p class="card-genre">${product.genre}</p>
