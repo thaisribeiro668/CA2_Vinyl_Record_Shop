@@ -99,7 +99,7 @@ nav {
 }
 
 
-/* Cart */
+/* Cart Button on top of the page */
 
 .cart-btn {
     position: absolute;
@@ -321,9 +321,12 @@ nav {
 }
 
 .cart-items {
+    display: flex;
+  flex-direction: column; /* stack children vertically */
+  gap: 1rem;          
     flex:1;
     overflow-y:auto;
-    padding:1rem 1.5rem
+    padding:1rem 1.5rem;
 }
 
 .cart-empty {
@@ -377,13 +380,13 @@ nav {
 }
 
 .cart-item-artist {
-    font-size:.75rem;
+    font-size:.60rem;
     color:var(--warm-gray)
 }
 
 .cart-item-price {
     font-family:'DM Mono',monospace;
-    font-size:.85rem;
+    font-size:.70rem;
     margin-top:.3rem
 }
 
@@ -401,9 +404,33 @@ nav {
     color:var(--red);
 }
 
+.cart-item-controls {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  gap: .5rem;
+  margin-top: .3rem;
+}
+
+.qty-input {
+  width: 30px;
+  height: 20px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: .1rem;
+  font-size: .7rem;
+  font-family: 'DM Mono', monospace;
+}
+
+.qty-label {
+  font-size: .7rem;
+  color: var(--ink);
+}
+
 .cart-footer {
-    padding:1.5rem;
-    border-top:1px solid var(--border);
+    padding:0.2rem 1.2rem;
+    border-top:px solid var(--border);
 }
 
 .cart-total-row {
@@ -415,7 +442,7 @@ nav {
 
 .cart-total-label {
     font-family:'DM Mono',monospace;
-    font-size:.7rem;
+    font-size:.6rem;
     letter-spacing:.12em;
     text-transform:uppercase;
     color:var(--warm-gray)
@@ -423,16 +450,17 @@ nav {
 
 .cart-total-val {
     font-family:'Playfair Display',serif;
-    font-size:1.5rem}
+    font-size:1.3rem
+}
 
 .checkout-btn {
     width:100%;
     background:var(--ink);
     color:var(--cream);
     border:none;
-    padding:.9rem;
+    padding:.6rem;
     font-family:'DM Sans',sans-serif;
-    font-size:.8rem;
+    font-size:.7rem;
     font-weight:500;
     letter-spacing:.12em;
     text-transform:uppercase;

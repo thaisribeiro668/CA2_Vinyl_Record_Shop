@@ -154,19 +154,34 @@ console.log("Trying to add ID:", id);
         updateCart();
     }
 
+    function updateQty(id, newQty) {
+  const item = cart.find(p => p.id === id);
+  if (!item) return;
+
+  const qty = parseInt(newQty);
+  if (isNaN(qty) || qty < 1) {
+    showToast("Quantity must be at least 1.");
+    return;
+  }
+
+  item.qty = qty;
+  saveCart();
+  updateCart();
+}
+
     function updateCart() {
   try {
-    const count = cart.length;
+    const count = cart.reduce((sum, item) => sum + item.qty, 0);
     // Header cart button
     document.getElementById('cartCount').textContent = count;
 
-    // Filters cart button
+    // Filters cart button - check
     const filterCount = document.getElementById('cartCountFilter');
     // Update the filter cart count if the element exists 
     if (filterCount) filterCount.textContent = count;
 
     // Calculate total safely
-    const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
     document.getElementById('cartTotal').textContent = '€' + total.toFixed(2);
 
     
@@ -179,16 +194,28 @@ console.log("Trying to add ID:", id);
       </div>`;
     } else {
       element.innerHTML = cart.map(item => `
-        <div class="cart-item">
-          <div class="cart-item-info">
-            <p class="cart-item-title">${item.title}</p>
-            <p class="cart-item-artist">${item.artist}</p>
-            <p class="cart-item-price">€${Number(item.price).toFixed(2)}</p>
-          </div>
-          <button class="cart-item-remove" onclick="removeFromCart(${item.id})" aria-label="Remove ${item.title}">
-            <i class="ti ti-trash"></i>
-          </button>
-        </div>
+       <div class="cart-item">
+    <div class="cart-item-info">
+      <p class="cart-item-title">${item.title}</p>
+      <p class="cart-item-artist">${item.artist}</p>
+      <p class="cart-item-price">€${Number(item.price).toFixed(2)}</p>
+    </div>
+
+    <div class="cart-item-controls">
+      <label for="qty-${item.id}" class="qty-label">Qty:</label>
+      <input 
+        type="number" 
+        id="qty-${item.id}" 
+        class="qty-input" 
+        min="1" 
+        value="${item.qty}" 
+        onchange="updateQty(${item.id}, this.value)"
+      >
+      <button class="cart-item-remove" onclick="removeFromCart(${item.id})" aria-label="Remove ${item.title}">
+        <i class="ti ti-trash"></i>
+      </button>
+    </div>
+  </div>
       `).join('');
     }
 

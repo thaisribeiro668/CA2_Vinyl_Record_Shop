@@ -106,38 +106,55 @@ function addToCartFromDetail() {
 }
 
 function updateCart() {
-  loadCartFromStorage();
+  try {
+    loadCartFromStorage();
 
-  const count = cart.reduce((sum, item) => sum + item.qty, 0);
-  document.getElementById("cartCount").textContent = count;
+    const count = cart.reduce((sum, item) => sum + item.qty, 0);
+    document.getElementById("cartCount").textContent = count;
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  document.getElementById("cartTotal").textContent = "€" + total.toFixed(2);
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    document.getElementById("cartTotal").textContent = "€" + total.toFixed(2);
 
-  const element = document.getElementById("cartItems");
+    const element = document.getElementById("cartItems");
 
-  if (cart.length === 0) {
-    element.innerHTML = `
-      <div class="cart-empty">
-        <i class="ti ti-vinyl" aria-hidden="true" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
-        <p>Your cart is empty</p>
-      </div>`;
-  } else {
-    element.innerHTML = cart
-      .map(
-        item => `
-        <div class="cart-item">
-          <div class="cart-item-info">
-            <p class="cart-item-title">${item.title}</p>
-            <p class="cart-item-artist">${item.artist}</p>
-            <p class="cart-item-price">€${(item.price * item.qty).toFixed(2)}</p>
-          </div>
-          <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
-            <i class="ti ti-trash"></i>
-          </button>
-        </div>`
-      )
-      .join("");
+    if (cart.length === 0) {
+      element.innerHTML = `
+        <div class="cart-empty">
+          <i class="ti ti-vinyl" aria-hidden="true" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
+          <p>Your cart is empty</p>
+        </div>`;
+    } else {
+      element.innerHTML = cart
+        .map(
+          item => `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <p class="cart-item-title">${item.title}</p>
+              <p class="cart-item-artist">${item.artist}</p>
+              <p class="cart-item-price">€${(item.price * item.qty).toFixed(2)}</p>
+            </div>
+
+            <div class="cart-item-controls">
+              <label for="qty-${item.id}" class="qty-label">Qty:</label>
+              <input 
+                type="number" 
+                id="qty-${item.id}" 
+                class="qty-input" 
+                min="1" 
+                value="${item.qty}" 
+                onchange="updateQty(${item.id}, this.value)"
+              >
+              <button class="cart-item-remove" onclick="removeFromCart(${item.id})" aria-label="Remove ${item.title}">
+                <i class="ti ti-trash"></i>
+              </button>
+            </div>
+          </div>`
+        )
+        .join("");
+    }
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    showToast("Something went wrong while updating your cart.");
   }
 }
 
