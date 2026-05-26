@@ -73,7 +73,10 @@ UPDATE products SET badge = 'New'     WHERE id = 9;
 UPDATE products SET badge = 'New'     WHERE id = 10;
 UPDATE products SET badge = 'Hot'     WHERE id = 11;
 UPDATE products SET badge = 'Limited' WHERE id = 12;
-
-SELECT id, title, badge FROM products;
-
 UPDATE products SET badge = 'Classic' WHERE id = 13;
+
+SELECT * FROM products;
+
+ALTER TABLE products
+ADD COLUMN releaseDate VARCHAR(255);
+DESCRIBE products;

@@ -60,7 +60,7 @@ const result = data.results[0];
 
 return {
       image: result.artworkUrl100.replace("100x100", "600x600"),
-      marketPrice: result.collectionPrice || null,
+      primaryGenreName: result.primaryGenreName || null,
       releaseDate: result.releaseDate || null
     };
 
@@ -68,7 +68,7 @@ return {
 console.error("Error fetching Apple album data:", error);
     return {
       image: "/images/fallback-cover.png",
-      marketPrice: null,
+      primaryGenreName: null,
       releaseDate: null
     };
 }
@@ -119,19 +119,52 @@ const product = productsFromDB[0];
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
+    // Keep your variable names
+    let image = product.image_url;
+    let genre = product.genre;
+    let releaseDate = product.releaseDate;
 
-const appleData = await getAppleAlbumData(product.artist, product.title);
+    // Fetch Apple API only if needed
+    if (!image || !genre || !releaseDate) {
+      const appleData = await getAppleAlbumData(product.artist, product.title);
 
+ // Save image if missing
+      if (!image && appleData.image) {
+        image = appleData.image;
+        await db.promise().query(
+          "UPDATE products SET image_url = ? WHERE id = ?",
+          [image, product.id]
+        );
+      }
+
+      // Save genre if missing
+      if (!genre && appleData.primaryGenreName) {
+        genre = appleData.primaryGenreName;
+        await db.promise().query(
+          "UPDATE products SET genre = ? WHERE id = ?",
+          [genre, product.id]
+        );
+      }
+
+      // Save release date if missing
+      if (!releaseDate && appleData.releaseDate) {
+        releaseDate = appleData.releaseDate;
+        await db.promise().query(
+          "UPDATE products SET releaseDate = ? WHERE id = ?",
+          [releaseDate, product.id]
+        );
+      }
+    }
 const fullProduct = {
       ...product,
-      image: appleData.image,
-      marketPrice: appleData.marketPrice,
-      releaseDate: appleData.releaseDate
+      image,
+      genre,
+      releaseDate
     };
 
     res.json(fullProduct);
 
-    } catch (err) {
+  } catch (err) {
     console.error("Error fetching product:", err);
     res.status(500).json({ error: "Failed to load product" });
   }

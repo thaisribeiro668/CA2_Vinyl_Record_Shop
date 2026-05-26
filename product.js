@@ -154,6 +154,19 @@ function toggleCart() {
   overlay.classList.toggle("open");
 }
 
+   function removeFromCart(productId) {
+        // Remove the product from the cart by filtering it out
+        cart = cart.filter(item => item.id !== productId); 
+        saveCart();
+        const btn = document.getElementById('btn-' + productId);
+        if (btn) {
+            // Update the button to indicate the product can be added again
+            btn.textContent = 'Add';
+            // Remove the 'added' class to reset the button state
+            btn.classList.remove('added');
+        }
+        updateCart();
+    }
 
 loadProduct();
 updateCart();
