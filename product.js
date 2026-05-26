@@ -1,17 +1,37 @@
-// 1. Get ID from URL (?id=3)
+let cart = [];
+
+// Function to store the cart of the both pages in local storage
+// //so that the cart is the same on both pages and doesn't reset
+// when going to the product page and back to the main page.
+function loadCartFromStorage() {
+  const stored = localStorage.getItem("cart");
+  cart = stored ? JSON.parse(stored) : [];
+}
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+loadCartFromStorage();
+
+// Get ID from URL (?id=3)
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
+let currentProduct = null;
+
 
 async function loadProduct() {
   try {
     const response = await fetch(`http://localhost:3000/products/${productId}`);
     const product = await response.json();
 
+    currentProduct = product;
+
     console.log(product);
 
     const container = document.getElementById("product-page-Detail");
     // Format release date nicely
-    
+    const inCart = cart.find(item => item.id === product.id);
     const release = product.releaseDate
       ? new Date(product.releaseDate).toLocaleDateString()
       : "Unknown";
@@ -44,12 +64,22 @@ async function loadProduct() {
             Release date: ${release}
           </p>
 
-          <button class="return-btn" onclick="window.location.href='index.html'">
-  <i class="ti ti-arrow-left"></i> Return to main page
-</button>
+         <button class="return-btn ${inCart ? 'added' : ''}" 
+        id="btn-${product.id}" 
+        onclick="addToCartFromDetail()">
+        ${inCart ? 'Added' : 'Add to Cart'}
+      </button>
         </div>
       </div>
-    `;
+    `
+    // Scroll to product detail after it renders
+setTimeout(() => {
+  document.getElementById("product-page-Detail").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}, 50);
+    ;
     } catch (error) {
     console.error("Error loading product:", error);
     document.getElementById("productDetail").textContent =
@@ -57,4 +87,73 @@ async function loadProduct() {
   }
 }
 
+
+// Called when clicking "Add to Cart" on the detail page
+function addToCartFromDetail() {
+  if (!currentProduct) return;
+
+  // reload cart in case it changed elsewhere
+  loadCartFromStorage();
+
+  const exists = cart.find(item => item.id === currentProduct.id);
+  if (!exists) {
+    cart.push({ ...currentProduct, qty: 1 });
+    saveCart();
+  }
+
+  // Redirect back to index and ask it to open the cart
+  window.location.href = "index.html?openCart=1";
+}
+
+function updateCart() {
+  loadCartFromStorage();
+
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  document.getElementById("cartCount").textContent = count;
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  document.getElementById("cartTotal").textContent = "€" + total.toFixed(2);
+
+  const element = document.getElementById("cartItems");
+
+  if (cart.length === 0) {
+    element.innerHTML = `
+      <div class="cart-empty">
+        <i class="ti ti-vinyl" aria-hidden="true" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
+        <p>Your cart is empty</p>
+      </div>`;
+  } else {
+    element.innerHTML = cart
+      .map(
+        item => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <p class="cart-item-title">${item.title}</p>
+            <p class="cart-item-artist">${item.artist}</p>
+            <p class="cart-item-price">€${(item.price * item.qty).toFixed(2)}</p>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>`
+      )
+      .join("");
+  }
+}
+
+function toggleCart() {
+  const sidebar = document.getElementById("cartSidebar");
+  const overlay = document.getElementById("cartOverlay");
+
+  if (!sidebar || !overlay) {
+    console.warn("Cart elements not found on this page.");
+    return;
+  }
+
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("open");
+}
+
+
 loadProduct();
+updateCart();

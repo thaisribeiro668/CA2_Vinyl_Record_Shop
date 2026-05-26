@@ -555,6 +555,7 @@ nav {
 /* PRODUCTS SESSION */
 .shop-section {
     padding: 2rem;
+    scroll-behavior: smooth;
 }
 
 .section-header {
@@ -915,17 +916,6 @@ nav {
 
 
 /* PRODUCTS PAGE STYLES */
-main.product-page-detail {
-  display: flex;
-  justify-content: center;   /* centers horizontally */
-  padding: 3rem 2rem;
-}
-
-#product-page-Detail {
-   width: 100%;
-  max-width: 960px;  
-}
-
 .product-detail-layout {
   display: grid;
   grid-template-columns: 1.2fr 1.8fr;
@@ -942,6 +932,14 @@ main.product-page-detail {
   margin: 0 auto;
   object-fit: contain;
   background: var(--ink);
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.product-detail-image:hover {
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    border-color: var(--ink);
+    transform: scale(1.08);
 }
 
 .product-detail-info h1 {

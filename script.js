@@ -3,6 +3,20 @@ let cart = [];
 let currentGenre = 'all';
 let currentSearch = '';
 
+// Function to store the cart of the both pages in local storage
+// //so that the cart is the same on both pages and doesn't reset
+// when going to the product page and back to the main page.
+function loadCartFromStorage() {
+  const stored = localStorage.getItem("cart");
+  cart = stored ? JSON.parse(stored) : [];
+}
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+loadCartFromStorage();
+
 async function loadProducts() {
     try {
         const response = await fetch("http://localhost:3000/products");
@@ -112,7 +126,9 @@ function displayProducts() {
     cart.push({...product, qty:1});
     document.getElementById('btn-'+id).textContent='Added';
     document.getElementById('btn-'+id).classList.add('added');
+    saveCart();
     updateCart();
+    toggleCart();
     showToast('"'+ product.title + '" added to cart');
   }
 } catch (error) {
@@ -127,6 +143,7 @@ console.log("Trying to add ID:", id);
     function removeFromCart(productId) {
         // Remove the product from the cart by filtering it out
         cart = cart.filter(item => item.id !== productId); 
+        saveCart();
         const btn = document.getElementById('btn-' + productId);
         if (btn) {
             // Update the button to indicate the product can be added again
@@ -182,4 +199,13 @@ console.log("Trying to add ID:", id);
 }
 
     displayProducts();
-    updateCart();
+    updateCart(); 
+
+    // After initial render, check if we should auto-open the cart
+const params = new URLSearchParams(window.location.search);
+if (params.get("openCart") === "1") {
+  // small timeout so DOM & cart render first
+  setTimeout(() => {
+    toggleCart();
+  }, 200);
+}

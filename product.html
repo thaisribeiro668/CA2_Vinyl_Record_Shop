@@ -16,10 +16,9 @@
   <!-- Navigation Links -->
   <div class="nav-center">
     <ul class="nav-links">
-      <li><a href="#">Shop</a></li>
-      <li><a href="#">Genres</a></li>
-      <li><a href="#">About</a></li>
+      <li><a href="index.html#shop-section">Shop</a></li>
       <li><a href="#">New Arrivals</a></li>
+      <li><a href="#">About</a></li>
     </ul>
   </div>
 
@@ -72,13 +71,45 @@
   <!-- Subtitle + CTA at bottom -->
 <div class="hero-bottom">
   <p class="hero-sub">Vinyl record store<br>in Dublin</p>
-  <button class="hero-cta" onclick="document.querySelector('.shop-section').scrollIntoView({behavior:'smooth'})">
+  <button class="hero-cta" onclick="window.location.href='index.html#shop-section'">  
    Go to the catalog
   </button>
 </div>
 </section>
   <main class="product-page-detail">
     <div id="product-page-Detail"></div>
+
+    <!-- Cart -->
+ <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+ 
+ <aside class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2>Your Cart</h2>
+    <button class="close-btn" onclick="toggleCart()" aria-label="Close cart">
+      <i class="ti ti-x"></i>
+</button>
+  </div>
+
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <i class="ti ti-vinyl" aria-hidden="true" class="cart-empty-icon" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
+      <p>your cart is empty</p>
+    </div>
+  </div>
+
+<!-- Cart Footer -->
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cartTotal">€0.00</span>
+    </div>
+    <button class="checkout-btn" onclick="sendPrompt('I want to proceed to checkout')">Proceed to checkout →</button>
+    <button class="continue-btn" onclick="toggleCart()">Continue browsing</button>
+  </div>
+</div>
+</aside>
+
+
   </main>
 
 <!-- Footer -->
