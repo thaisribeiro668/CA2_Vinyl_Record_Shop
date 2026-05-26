@@ -622,7 +622,7 @@ nav {
 
 .product-card:hover {
     transform: translateY(-3px);
-    border-color: var(--ink);
+    box-shadow: 0 6px 20px var(--warm-gray);  
 }
 
 .product-card.hidden {
@@ -632,7 +632,7 @@ nav {
 .card-img {
     width: 100%;
     aspect-ratio: 1;
-    background: var(--ink);
+    background: var(--cream);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -652,8 +652,8 @@ nav {
    width: 100%;
   height: 100%;
   object-fit: contain;   /* shows the entire image */
-  background-color: var(--ink); /* optional: fills empty space with your dark tone */
 }
+
 
 .hover-hint {
   position: absolute;

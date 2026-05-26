@@ -80,3 +80,34 @@ SELECT * FROM products;
 ALTER TABLE products
 ADD COLUMN releaseDate VARCHAR(255);
 DESCRIBE products;
+
+SELECT id, title, genre, releaseDate FROM products WHERE id = 1;
+
+UPDATE products
+SET price = 23.49
+WHERE id = 13;
+
+UPDATE products
+SET price = 13.59
+WHERE id = 10;
+
+UPDATE products
+SET price = 9.50
+WHERE id = 9;
+
+UPDATE products
+SET price = 25.00
+WHERE id = 7;
+
+UPDATE products
+SET price = 15.99
+WHERE id = 6;
+
+UPDATE products
+SET price = 9.59
+WHERE id = 2;
+
+UPDATE products
+SET price = 12.29
+WHERE id = 2;
+

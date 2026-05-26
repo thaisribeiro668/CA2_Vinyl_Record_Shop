@@ -55,7 +55,7 @@ async function loadProduct() {
           </p>
 
           <p class="detail-market-price">
-            Market price (Apple): ${
+            Market price (Discogs): ${
               product.marketPrice ? `€${product.marketPrice}` : "Not available"
             }
           </p>

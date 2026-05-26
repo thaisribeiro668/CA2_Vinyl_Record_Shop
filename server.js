@@ -74,6 +74,76 @@ console.error("Error fetching Apple album data:", error);
 }
 }
 
+// Discogs call for market price data
+async function getDiscogsMarketPrice(artist, album) {
+  try {
+    const query = encodeURIComponent(`${artist} ${album}`);
+    const searchUrl = `https://api.discogs.com/database/search?q=${query}&type=release`;
+
+    const searchResponse = await fetch(searchUrl, {
+      headers: {
+        "User-Agent": "VinylShop/1.0 +https://yourwebsite.com",
+        "Authorization": `Discogs token=${process.env.DISCOGS_TOKEN}`
+      }
+    });
+
+    if (!searchResponse.ok) {
+      console.error("Discogs API error:", searchResponse.status, searchResponse.statusText);
+      return { marketPrice: null };
+    }
+
+    const searchData = await searchResponse.json();
+
+    if (!searchData.results || searchData.results.length === 0) {
+      console.log("No Discogs results for:", artist, album);
+      return { marketPrice: null };
+    }
+
+    const release = searchData.results[0];
+    const releaseId = release.id;
+    const masterId = release.master_id;
+    const targetIds = [releaseId, masterId].filter(Boolean);
+
+    let marketPrice = null;
+
+    for (const id of targetIds) {
+      // ✅ Use marketplace/stats instead of price_suggestions
+      const statsUrl = `https://api.discogs.com/marketplace/stats/${id}`;
+      console.log("💰 Discogs STATS URL:", statsUrl);
+
+      const statsResponse = await fetch(statsUrl, {
+        headers: {
+          "User-Agent": "VinylShop/1.0 +https://yourwebsite.com",
+          "Authorization": `Discogs token=${process.env.DISCOGS_TOKEN}`
+        }
+      });
+
+      if (!statsResponse.ok) {
+        console.warn(`Discogs stats error for ID ${id}:`, statsResponse.status, statsResponse.statusText);
+        continue;
+      }
+
+      const statsData = await statsResponse.json();
+      console.log("💰 Discogs STATS DATA:", statsData);
+
+      // lowest_price is the most useful for a "market price" indicator
+      marketPrice = statsData.median_price?.value
+        ?? statsData.lowest_price?.value
+        ?? null;
+
+      if (marketPrice) break;
+    }
+
+    console.log("✅ Market price for:", artist, album, { marketPrice });
+    return { marketPrice };
+
+  } catch (error) {
+    console.error("Error fetching Discogs market price:", error);
+    return { marketPrice: null };
+  }
+}
+
+
 // Routes
 // GETTING ALL PRODUCTS - response will be sent to loadProducts() on script.js
 app.get('/products', async (req, res) => {
@@ -155,11 +225,16 @@ const product = productsFromDB[0];
         );
       }
     }
+
+    // Fetch Discogs market price
+    const marketPrice = await getDiscogsMarketPrice(product.artist, product.title);
+
 const fullProduct = {
       ...product,
       image,
       genre,
-      releaseDate
+      releaseDate,
+      marketPrice: marketPrice.marketPrice
     };
 
     res.json(fullProduct);
