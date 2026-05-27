@@ -5,7 +5,7 @@
   <title>Groove & Grain — Vinyl Record Shop</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <script src="product.js" defer></script>
+  <script src="new_arrivals.js" defer></script>
 </head>
 <body>
     <header>
@@ -18,7 +18,7 @@
   <div class="nav-center">
    <ul class="nav-links">
       <li><a href="new_arrivals.html">New Arrivals</a></li>
-      <li><a href="about.html#about-page">About</a></li>
+      <li><a href="about.html">About</a></li>
       <li><a href="visit_us.html#visit-us-page">Visit Us</a></li>
     </ul>
   </div>
@@ -31,6 +31,7 @@
     </button>
   </nav>    
 </header>
+
  <section class="hero">
  <!-- Big vinyl cropped at top -->
   <div class="hero-vinyl-wrap">
@@ -77,12 +78,44 @@
   </button>
 </div>
 </section>
-  <main class="product-page-detail">
-    <div id="product-page-Detail"></div>
+  <main >
+<!-- Top Filters -->
+<section class="filters">
+  <span class="filter-label">Genre:</span>
+  <button class="filter-btn active" data-genre="all" onclick="filterGenre(this)">All</button>
+  <button class="filter-btn" data-genre="Jazz" onclick="filterGenre(this)">Jazz</button>
+  <button class="filter-btn" data-genre="Rock" onclick="filterGenre(this)">Rock</button>
+  <button class="filter-btn" data-genre="Soul" onclick="filterGenre(this)">Soul</button>
+  <button class="filter-btn" data-genre="Electronic" onclick="filterGenre(this)">Electronic</button>
+  <button class="filter-btn" data-genre="Classical" onclick="filterGenre(this)">Classical</button>
+  
+  <!-- Search box -->
+<div class="search-wrap">
+    <i class="ti ti-search search-icon" aria-hidden="true"></i>
+    <input type="text" placeholder="Search records…" oninput="searchRecords(this.value)">
+  </div>
+
+  <!-- Cart button -->
+    <button class="cart-btn-filter" onclick="toggleCart()">
+      <i class="ti ti-shopping-bag"></i> Cart
+      <span class="cart-count" id="cartCountFilter">0</span>
+    </button>
+</section>
+
+<!-- Shop section filtered for New Arrivals -->
+ <!-- Same structure and js used from index.html -->
+<section class="shop-section" id="new-arrivals">
+  <div class="section-header">
+    <h2 class="section-title">New Arrivals</h2>
+    <span class="result-count" id="resultCount"></span>
+  </div>
+  <!-- Product grid will show up here according to filters -->
+  <div class="product-grid" id="new-arrivals-grid"></div>
+
+</section>
 
     <!-- Cart -->
  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
- 
  <aside class="cart-sidebar" id="cartSidebar">
   <div class="cart-header">
     <h2>Your Cart</h2>
@@ -156,5 +189,6 @@
   </div>
 </footer>
 
+<div id="toast" class="toast"></div>
 </body>
 </html>

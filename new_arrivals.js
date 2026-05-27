@@ -1,6 +1,6 @@
 let products = [];
 let cart = [];
-let currentGenre = 'all';
+let badge = 'New';
 let currentSearch = '';
 
 // Function to store the cart of the both pages in local storage
@@ -32,14 +32,14 @@ async function loadProducts() {
 
 function displayProducts() {
   try {
-    const grid = document.getElementById("productGrid");
+    const grid = document.getElementById("new-arrivals-grid");
     //Variable to track how many products are visible after filtering
     let visible = 0;
     // For each product, check if it matches the current genre and search term
     grid.innerHTML = products.map(product => {
         // Determine if the product should be shown based on genre and search filters
-        const show = (currentGenre === 'all' || product.genre === currentGenre) &&
-            (product.title.toLowerCase().includes(currentSearch) || product.artist.toLowerCase().includes(currentSearch));
+        const show = product.badge === 'New' &&
+    (product.title.toLowerCase().includes(currentSearch) || product.artist.toLowerCase().includes(currentSearch));
             // If the product matches the filters, increment the visible count
             if(show) visible++;
          // Check if the product is already in the cart
@@ -65,8 +65,18 @@ function displayProducts() {
             </div>
             </div>`;
     }).join('');
+    // ⭐ Scroll AFTER rendering
+setTimeout(() => {
+  document.getElementById("new-arrivals-grid").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}, 50);
+    
     //combines all the mapped HTML snippets into one big string so they render correctly inside your cart container.
     document.getElementById('resultCount').textContent = visible + ' record'+(visible !==1 ? 's' : '');          
+  
+
   } catch (error) {
     console.error("Error displaying products:", error);
     showToast("Something went wrong while displaying products.");
