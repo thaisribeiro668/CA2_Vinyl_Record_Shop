@@ -1,7 +1,7 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const express = require('express');
-const mysql = require('mysql2');
+const express = require("express");
+const mysql = require("mysql2");
 const cors = require("cors");
 const app = express();
 app.use(cors());
@@ -13,10 +13,10 @@ const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
 });
 
-db.connect(err => {
+db.connect((err) => {
   if (err) throw err;
   console.log("MySQL connected");
 });
@@ -30,11 +30,15 @@ async function getAppleAlbumData(artist, album) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      console.error("Apple Music API error:", response.status, response.statusText);
+      console.error(
+        "Apple Music API error:",
+        response.status,
+        response.statusText,
+      );
       return {
         image: "/images/fallback-cover.png",
         primaryGenreName: null, // Fixed key name
-        releaseDate: null
+        releaseDate: null,
       };
     }
 
@@ -45,24 +49,23 @@ async function getAppleAlbumData(artist, album) {
       return {
         image: "/images/fallback-cover.png",
         primaryGenreName: null, // Fixed key name
-        releaseDate: null
+        releaseDate: null,
       };
     }
-  
+
     const result = data.results[0];
 
     return {
       image: result.artworkUrl100.replace("100x100", "600x600"),
       primaryGenreName: result.primaryGenreName || null,
-      releaseDate: result.releaseDate || null
+      releaseDate: result.releaseDate || null,
     };
-
   } catch (error) {
     console.error("Error fetching Apple album data:", error);
     return {
       image: "/images/fallback-cover.png",
       primaryGenreName: null,
-      releaseDate: null
+      releaseDate: null,
     };
   }
 }
@@ -76,12 +79,16 @@ async function getDiscogsMarketPrice(artist, album) {
     const searchResponse = await fetch(searchUrl, {
       headers: {
         "User-Agent": "VinylShop/1.0 +https://yourwebsite.com",
-        "Authorization": `Discogs token=${process.env.DISCOGS_TOKEN}`
-      }
+        Authorization: `Discogs token=${process.env.DISCOGS_TOKEN}`,
+      },
     });
 
     if (!searchResponse.ok) {
-      console.error("Discogs API error:", searchResponse.status, searchResponse.statusText);
+      console.error(
+        "Discogs API error:",
+        searchResponse.status,
+        searchResponse.statusText,
+      );
       return { marketPrice: null };
     }
 
@@ -106,28 +113,30 @@ async function getDiscogsMarketPrice(artist, album) {
       const statsResponse = await fetch(statsUrl, {
         headers: {
           "User-Agent": "VinylShop/1.0 +https://yourwebsite.com",
-          "Authorization": `Discogs token=${process.env.DISCOGS_TOKEN}`
-        }
+          Authorization: `Discogs token=${process.env.DISCOGS_TOKEN}`,
+        },
       });
 
       if (!statsResponse.ok) {
-        console.warn(`Discogs stats error for ID ${id}:`, statsResponse.status, statsResponse.statusText);
+        console.warn(
+          `Discogs stats error for ID ${id}:`,
+          statsResponse.status,
+          statsResponse.statusText,
+        );
         continue;
       }
 
       const statsData = await statsResponse.json();
       console.log("💰 Discogs STATS DATA:", statsData);
 
-      marketPrice = statsData.median_price?.value
-        ?? statsData.lowest_price?.value
-        ?? null;
+      marketPrice =
+        statsData.median_price?.value ?? statsData.lowest_price?.value ?? null;
 
       if (marketPrice) break;
     }
 
     console.log("✅ Market price for:", artist, album, { marketPrice });
     return { marketPrice };
-
   } catch (error) {
     console.error("Error fetching Discogs market price:", error);
     return { marketPrice: null };
@@ -136,7 +145,7 @@ async function getDiscogsMarketPrice(artist, album) {
 
 // Routes
 // GETTING ALL PRODUCTS
-app.get('/products', async (req, res) => {
+app.get("/products", async (req, res) => {
   try {
     const [productsFromDB] = await db.promise().query("SELECT * FROM products");
 
@@ -147,20 +156,24 @@ app.get('/products', async (req, res) => {
         }
 
         // Fetch data object from Apple API
-        const appleData = await getAppleAlbumData(product.artist, product.title);
-
-        // ✅ FIXED: Save ONLY the image string to the database
-        await db.promise().query(
-          "UPDATE products SET image_url = ? WHERE id = ?", 
-          [appleData.image, product.id]
+        const appleData = await getAppleAlbumData(
+          product.artist,
+          product.title,
         );
 
+        // ✅ FIXED: Save ONLY the image string to the database
+        await db
+          .promise()
+          .query("UPDATE products SET image_url = ? WHERE id = ?", [
+            appleData.image,
+            product.id,
+          ]);
+
         return { ...product, image: appleData.image };
-      })
+      }),
     );
 
     res.json(completeProducts);
-
   } catch (err) {
     console.error("Error fetching products:", err);
     res.status(500).json({ error: "Failed to load products" });
@@ -168,12 +181,11 @@ app.get('/products', async (req, res) => {
 });
 
 // GETTING A SINGLE PRODUCT BY ID
-app.get("/products/:id", async(req, res) => {
+app.get("/products/:id", async (req, res) => {
   try {
-    const [productsFromDB] = await db.promise().query(
-      "SELECT * FROM products WHERE id = ?",
-      [req.params.id]
-    );
+    const [productsFromDB] = await db
+      .promise()
+      .query("SELECT * FROM products WHERE id = ?", [req.params.id]);
 
     const product = productsFromDB[0];
     if (!product) {
@@ -189,41 +201,49 @@ app.get("/products/:id", async(req, res) => {
 
       if (!image && appleData.image) {
         image = appleData.image;
-        await db.promise().query(
-          "UPDATE products SET image_url = ? WHERE id = ?",
-          [image, product.id]
-        );
+        await db
+          .promise()
+          .query("UPDATE products SET image_url = ? WHERE id = ?", [
+            image,
+            product.id,
+          ]);
       }
 
       if (!genre && appleData.primaryGenreName) {
         genre = appleData.primaryGenreName;
-        await db.promise().query(
-          "UPDATE products SET genre = ? WHERE id = ?",
-          [genre, product.id]
-        );
+        await db
+          .promise()
+          .query("UPDATE products SET genre = ? WHERE id = ?", [
+            genre,
+            product.id,
+          ]);
       }
 
       if (!releaseDate && appleData.releaseDate) {
         releaseDate = appleData.releaseDate;
-        await db.promise().query(
-          "UPDATE products SET releaseDate = ? WHERE id = ?",
-          [releaseDate, product.id]
-        );
+        await db
+          .promise()
+          .query("UPDATE products SET releaseDate = ? WHERE id = ?", [
+            releaseDate,
+            product.id,
+          ]);
       }
     }
 
-    const marketPrice = await getDiscogsMarketPrice(product.artist, product.title);
+    const marketPrice = await getDiscogsMarketPrice(
+      product.artist,
+      product.title,
+    );
 
     const fullProduct = {
       ...product,
       image,
       genre,
       releaseDate,
-      marketPrice: marketPrice.marketPrice
+      marketPrice: marketPrice.marketPrice,
     };
 
     res.json(fullProduct);
-
   } catch (err) {
     console.error("Error fetching product:", err);
     res.status(500).json({ error: "Failed to load product" });
@@ -231,56 +251,58 @@ app.get("/products/:id", async(req, res) => {
 });
 
 // CHECKOUT FORM SUBMISSION - POST REQUEST
-app.post('/api/checkout', (req, res) => {
+app.post("/api/checkout", (req, res) => {
   // Destructure the payload properties coming from the frontend (req.body)
-const {first_name,
-last_name,
-email,
-phone,
-street_address,
-complement,
-city,
-postcode,
-country
-} = req.body;
+  const {
+    first_name,
+    last_name,
+    email,
+    phone,
+    street_address,
+    complement,
+    city,
+    postcode,
+    country,
+  } = req.body;
 
-// Basic validation fallback
-if (!first_name || !last_name || !email || !street_address) {
+  // Basic validation fallback
+  if (!first_name || !last_name || !email || !street_address) {
     return res.status(400).json({ error: "Missing required checkout fields." });
   }
 
-  
-const sqlQuery = `
+  const sqlQuery = `
     INSERT INTO checkout_submissions 
     (first_name, last_name, email, phone, street_address, complement, city, postcode, country) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-const values = [
-    first_name, 
-    last_name, 
-    email, 
-    phone || null, // default to null if empty, 
-    street_address, 
+  const values = [
+    first_name,
+    last_name,
+    email,
+    phone || null, // default to null if empty,
+    street_address,
     complement || null, // default to null if empty
-    city, 
-    postcode, 
-    country
+    city,
+    postcode,
+    country,
   ];
 
-// Execute the MySQL query using your connection instance ('db')
+  // Execute the MySQL query using your connection instance ('db')
   db.query(sqlQuery, values, (error, results) => {
     if (error) {
       console.error("MySQL Database Error:", error);
-      return res.status(500).json({ error: "Failed to store submission data inside database." });
+      return res
+        .status(500)
+        .json({ error: "Failed to store submission data inside database." });
     }
 
     // Respond back to frontend that insertion succeeded
-    return res.status(201).json({ 
-      message: "Order data stored successfully!", 
-      submissionId: results.insertId 
+    return res.status(201).json({
+      message: "Order data stored successfully!",
+      submissionId: results.insertId,
     });
-});
+  });
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));

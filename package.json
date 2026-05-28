@@ -1,4 +1,11 @@
 {
+  "name": "vinyl-website-ca2",
+  "version": "1.0.0",
+  "description": "Vinyl shop web app for CA2 project",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
