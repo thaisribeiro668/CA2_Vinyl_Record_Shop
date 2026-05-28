@@ -104,7 +104,7 @@
       <span class="cart-total-label">Total</span>
       <span class="cart-total-val" id="cartTotal">€0.00</span>
     </div>
-    <button class="checkout-btn" onclick="sendPrompt('I want to proceed to checkout')">Proceed to checkout →</button>
+<button class="checkout-btn" id="proceedToCheckoutBtn">Proceed to checkout →</button>
     <button class="continue-btn" onclick="toggleCart()">Continue browsing</button>
   </div>
 </div>
@@ -136,13 +136,14 @@
       </div>
     </div>
 
-    <!-- Newsletter -->
+       <!-- Newsletter -->
     <div class="footer-col footer-newsletter">
       <h4 class="footer-col-title">Join the Crate</h4>
       <p class="footer-newsletter-text">New drops, rare finds &amp; listening notes — straight to your inbox.</p>
       <div class="newsletter-form">
         <input type="email" placeholder="your@email.com" class="newsletter-input">
-        <button class="newsletter-btn">→</button>
+        
+        <button class="newsletter-btn" onclick="sendNewsletterSubscription()">→</button>
       </div>
       <p class="footer-address"><i class="ti ti-map-pin" style="font-size:.85rem"></i> Dublin, Arbat Street 12, Building 2</p>
     </div>

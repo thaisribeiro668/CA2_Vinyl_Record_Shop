@@ -23,7 +23,7 @@ let currentProduct = null;
 async function loadProduct() {
   try {
     const response = await fetch(`http://localhost:3000/products/${productId}`);
-    const product = await response.json();
+    product = await response.json();
 
     currentProduct = product;
 
@@ -176,6 +176,7 @@ function toggleCart() {
         cart = cart.filter(item => item.id !== productId); 
         saveCart();
         const btn = document.getElementById('btn-' + productId);
+
         if (btn) {
             // Update the button to indicate the product can be added again
             btn.textContent = 'Add';
@@ -183,7 +184,45 @@ function toggleCart() {
             btn.classList.remove('added');
         }
         updateCart();
+        showToast('"'+ currentProduct.title + '" removed from cart');
     }
+
+        function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message; 
+        // Add the 'show' class to make the toast visible
+        toast.classList.add('show');
+        // Remove the 'show' class after 3 seconds
+        setTimeout(() => toast.classList.remove('show'), 2200);
+        }; 
 
 loadProduct();
 updateCart();
+
+document.getElementById('proceedToCheckoutBtn').addEventListener('click', function() {
+  // Check the global cart array that your script is already maintaining
+  if (cart.length === 0) {
+    alert("Your cart is empty! Add some vinyl records before checking out.");
+    return; // Stops execution completely
+  }
+
+  // Only triggers if cart has items
+  window.location.href = 'checkout_page.html#checkout-page';
+});
+
+function sendNewsletterSubscription() {
+  // Finds the input field using the class name from your HTML
+  const newsletterInput = document.querySelector('.newsletter-input');
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Clean up the text input value
+  const emailValue = newsletterInput.value.trim();
+
+  // Correct syntax: regexPattern.test(stringToTest)
+  if (!emailPattern.test(emailValue)) {
+    showToast("Please enter a valid email address.");
+  } else {
+    showToast("Thank you for subscribing to our newsletter!");
+    newsletterInput.value = ''; // Clears the input field box on success
+  }
+}

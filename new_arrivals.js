@@ -153,6 +153,7 @@ console.log("Trying to add ID:", id);
     function removeFromCart(productId) {
         // Remove the product from the cart by filtering it out
         cart = cart.filter(item => item.id !== productId); 
+        const product = products.find(prod=>prod.id===productId);
         saveCart();
         const btn = document.getElementById('btn-' + productId);
         if (btn) {
@@ -162,6 +163,7 @@ console.log("Trying to add ID:", id);
             btn.classList.remove('added');
         }
         updateCart();
+        showToast('"'+ product.title + '" removed from cart');
     }
 
     function updateQty(id, newQty) {
@@ -245,4 +247,32 @@ if (params.get("openCart") === "1") {
   setTimeout(() => {
     toggleCart();
   }, 200);
+}
+
+document.getElementById('proceedToCheckoutBtn').addEventListener('click', function() {
+  // Check the global cart array that your script is already maintaining
+  if (cart.length === 0) {
+    alert("Your cart is empty! Add some vinyl records before checking out.");
+    return; // Stops execution completely
+  }
+
+  // Only triggers if cart has items
+  window.location.href = 'checkout_page.html#checkout-page';
+});
+
+function sendNewsletterSubscription() {
+  // Finds the input field using the class name from your HTML
+  const newsletterInput = document.querySelector('.newsletter-input');
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Clean up the text input value
+  const emailValue = newsletterInput.value.trim();
+
+  // Correct syntax: regexPattern.test(stringToTest)
+  if (!emailPattern.test(emailValue)) {
+    showToast("Please enter a valid email address.");
+  } else {
+    showToast("Thank you for subscribing to our newsletter!");
+    newsletterInput.value = ''; // Clears the input field box on success
+  }
 }

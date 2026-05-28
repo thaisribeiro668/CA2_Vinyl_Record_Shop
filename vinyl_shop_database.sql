@@ -109,5 +109,94 @@ WHERE id = 2;
 
 UPDATE products
 SET price = 12.29
+WHERE id = 1;
+
+UPDATE products
+SET price = 80.99
+WHERE id = 12;
+
+INSERT INTO products (id, title, artist, genre, price, badge, image_url, releaseDate) VALUES
+(1,'Kind of Blue','Miles Davis','Jazz',12.99,'Hot','images/kind_of_blue.jpg',''),
+(2,'Blue Train','John Coltrane','Jazz',10.00,'Hot','images/blue_train.jpg',''),
+(3,'Led Zeppelin IV','Led Zeppelin','Rock',32.99,'Limited','images/lz4.jpg',''),
+(4,'Thriller','Michael Jackson','',29.99,'Hot','',''),
+(5,'Like a Virgin','Madonna','',26.99,'New','',''),
+(6,'I Never Loved a Man','Aretha Franklin','Soul',15.99,'New','',''),
+(7,'Homework','Daft Punk','Electronic',25.00,'New','',''),
+(8,'Bohemian Rhapsody','Queen','',35.00,'Limited','',''),
+(9,'Goldberg Variations','Glenn Gould','Classical',9.50,'Classical','',''),
+(10,'Abbey Road','The Beatles','Rock',15.00,'Limited','',''),
+(11,'Your Favorite Toy','Foo Fighters','',39.99,'New','',''),
+(12,'Elvis Presley','Elvis Presley','',78.99,'Limited','',''),
+(13,'The Number of the Beast','Iron Maiden','Rock',23.99,'Hot','images/iron_maiden.jpg','')
+
+ON DUPLICATE KEY UPDATE
+  title      = VALUES(title),
+  artist     = VALUES(artist),
+  genre      = VALUES(genre),
+  price      = VALUES(price),
+  badge      = VALUES(badge),
+  image_url  = VALUES(image_url),
+  releaseDate = VALUES(releaseDate);
+  
+  UPDATE products
+SET image_url = ''
+WHERE id = 1;
+
+UPDATE products
+SET image_url = ''
 WHERE id = 2;
 
+UPDATE products
+SET image_url = ''
+WHERE id = 3;
+
+UPDATE products
+SET image_url = ''
+WHERE id = 13;
+
+UPDATE products
+SET genre = 'Rock'
+WHERE id = 8;
+
+UPDATE products
+SET title = 'In Utero'
+WHERE id = 11;
+
+UPDATE products
+SET artist = 'Nirvana'
+WHERE id = 11;
+
+UPDATE products
+SET genre = 'Rock'
+WHERE id = 11;
+
+UPDATE products
+SET image_url = ''
+WHERE id = 11;
+
+UPDATE products
+SET releaseDate = ''
+WHERE id = 11;
+
+SELECT * FROM products;
+
+UPDATE products
+SET price = 25.00
+WHERE id = 11;
+
+CREATE TABLE checkout_submissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    street_address VARCHAR(255) NOT NULL,
+    complement VARCHAR(100),
+    city VARCHAR(100) NOT NULL,
+    postcode VARCHAR(20) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+SELECT * FROM checkout_submissions;

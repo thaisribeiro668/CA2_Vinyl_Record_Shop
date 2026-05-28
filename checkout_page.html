@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Groove & Grain — Vinyl Record Shop</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <script src="checkout_page.js" defer></script>
+</head>
+<body>
+    <header>
+    <!-- Webpage title -->
+    <h2 class="webpage-title">Groove & Grain — Vinyl Record Shop. Browse records by genre and add them to your cart.</h2>
+
+    <!-- Navigation area -->
+    <nav>
+  <!-- Navigation Links -->
+  <div class="nav-center">
+   <ul class="nav-links">
+      <li><a href="new_arrivals.html">New Arrivals</a></li>
+      <li><a href="about.html#about-page">About</a></li>
+      <li><a href="visit_us.html#visit-us-page">Visit Us</a></li>
+    </ul>
+  </div>
+
+  <!-- Shopping Cart -->
+    <button class="cart-btn" onclick="toggleCart()">
+      <i class="ti ti-shopping-bag"></i> Cart
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </nav>    
+</header>
+ <section class="hero">
+ <!-- Big vinyl cropped at top -->
+  <div class="hero-vinyl-wrap">
+    
+    <svg class="vinyl-spin" width="500" height="500" viewBox="0 0 260 260">
+      <!-- Grooves -->
+      <circle cx="130" cy="130" r="128" fill="#111"/>
+      <circle cx="130" cy="130" r="122" fill="none" stroke="#1e1e1e" stroke-width="1.2"/>
+      <circle cx="130" cy="130" r="116" fill="none" stroke="#1e1e1e" stroke-width=".8"/>
+      <circle cx="130" cy="130" r="110" fill="none" stroke="#222" stroke-width="1"/>
+      <circle cx="130" cy="130" r="104" fill="none" stroke="#1e1e1e" stroke-width=".8"/>
+      <circle cx="130" cy="130" r="98" fill="none" stroke="#222" stroke-width="1"/>
+      <circle cx="130" cy="130" r="92" fill="none" stroke="#1e1e1e" stroke-width=".8"/>
+      <circle cx="130" cy="130" r="86" fill="none" stroke="#222" stroke-width="1"/>
+      <circle cx="130" cy="130" r="80" fill="none" stroke="#1e1e1e" stroke-width=".8"/>
+      <circle cx="130" cy="130" r="74" fill="none" stroke="#222" stroke-width="1"/>
+      <circle cx="130" cy="130" r="68" fill="none" stroke="#1e1e1e" stroke-width=".8"/>
+      <!-- Label -->
+      <circle cx="130" cy="130" r="60" fill="#1A1612"/>
+      <circle cx="130" cy="130" r="42" fill="#C9A84C" opacity=".15"/>
+      <circle cx="130" cy="130" r="28" fill="#C9A84C" opacity=".28"/>
+      <circle cx="130" cy="130" r="16" fill="#C9A84C"/>
+      <!-- Spindle -->
+      <circle cx="130" cy="130" r="5" fill="#2a2520"/>
+      <circle cx="130" cy="130" r="2.5" fill="#888"/>
+     <!-- Rotation marker (this makes the spin visible) -->
+  <rect x="129" y="2" width="2" height="20" fill="#fff"/>    
+    </svg>
+  </div>
+
+    <!-- VINYL   SHOP wordmark flanking the record -->
+
+    <div class="hero-wordmark">
+    <span class="hero-word">Vinyl</span>
+    <span class="hero-word">Shop</span>
+      <div class="hero-logo">Groove<span>&</span>Grain</div>
+  </div>
+
+  <!-- Subtitle + CTA at bottom -->
+<div class="hero-bottom">
+  <p class="hero-sub">Vinyl record store<br>in Dublin</p>
+  <button class="hero-cta" onclick="window.location.href='index.html#shop-section'">  
+   Go to the catalog
+  </button>
+</div>
+</section>
+
+  <main>
+    <section class="checkout-page" id="checkout-page">
+   <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html" style="color:inherit;text-decoration:none;">Shop</a>
+    <i class="ti ti-chevron-right" style="font-size:.7rem"></i>
+    <span>Checkout</span>
+  </div>
+
+  <!-- Page title -->
+  <div class="page-title" style="max-width:1100px;margin:0 auto;padding:0 2rem 1.5rem">
+    <h1>Checkout</h1>
+    <p class="subtitle">Secure order — Groove & Grain Dublin</p>
+  </div>
+
+  <!-- Empty state (shown when no cart items) -->
+  <div class="empty-checkout" id="emptyState" style="display:none">
+    <i class="ti ti-vinyl"></i>
+    <p>Your cart is empty — nothing to check out yet.</p>
+    <a href="index.html" class="back-link">Browse the catalog</a>
+  </div>
+
+  <!-- Main checkout layout -->
+  <div class="checkout-layout" id="checkoutLayout">
+
+    <!-- LEFT: Form -->
+    <div class="checkout-form">
+
+      <!-- Contact -->
+      <div class="form-section">
+        <div class="section-label">Contact information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" required placeholder="Jane">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input type="text" id="lastName" required placeholder="Doe">
+          </div>
+          <div class="form-group full">
+            <label for="email">Email</label>
+            <input type="email" id="email" required placeholder="jane@example.com">
+          </div>
+          <div class="form-group full">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" placeholder="+353 87 000 0000">
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping -->
+      <div class="form-section">
+        <div class="section-label">Shipping address</div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label for="address">Street address</label>
+            <input type="text" id="address" required placeholder="12 Arbat Street">
+          </div>
+          <div class="form-group full">
+            <label for="component">Apartment, suite, etc. (optional)</label>
+            <input type="text" id="component" placeholder="Apt 4B">
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" placeholder="Dublin">
+          </div>
+          <div class="form-group">
+            <label for="postcode">Postcode</label>
+            <input type="text" id="postcode" required placeholder="D01 AB12">
+          </div>
+          <div class="form-group full">
+            <label for="country">Country</label>
+            <select id="country">
+              <option value="IE" selected>Ireland</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment -->
+      <div class="form-section">
+        <div class="section-label">Payment</div>
+
+        <div class="payment-tabs">
+          <button class="pay-tab active" onclick="selectTab(this,'card')">
+            <i class="ti ti-credit-card"></i> Card
+          </button>
+          <button class="pay-tab" onclick="selectTab(this,'paypal')">
+            <i class="ti ti-brand-paypal"></i> PayPal
+          </button>
+          <button class="pay-tab" onclick="selectTab(this,'bank')">
+            <i class="ti ti-building-bank"></i> Bank
+          </button>
+        </div>
+
+        <div id="cardFields" class="form-row">
+          <div class="form-group full">
+            <label for="cardNum">Card number</label>
+            <div class="card-number-wrap">
+              <input type="text" id="cardNum" required placeholder="0000 0000 0000 0000" maxlength="19" oninput="fmtCard(this)">
+              <div class="card-icons">
+                <span>VISA</span><span>Mastercard</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cardName">Name on card</label>
+            <input type="text" id="cardName" required placeholder="Jane Doe">
+          </div>
+          <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
+            <div class="form-group">
+              <label for="expiry">Expiry</label>
+              <input type="text" id="expiry" required placeholder="MM / YY" maxlength="7" oninput="fmtExpiry(this)">
+            </div>
+            <div class="form-group">
+              <label for="cvv">CVV</label>
+              <input type="text" id="cvv" placeholder="•••" maxlength="4">
+            </div>
+          </div>
+        </div>
+
+        <div id="paypalMsg" style="display:none;padding:1.2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:.9rem;color:var(--ink-muted)">
+          You'll be redirected to PayPal to complete your purchase securely.
+        </div>
+        <div id="bankMsg" style="display:none;padding:1.2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:.9rem;color:var(--ink-muted)">
+          Bank transfer details will be emailed to you after placing the order.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Order summary -->
+    <aside class="order-summary">
+      <h2>Order Summary</h2>
+
+      <div class="order-items" id="orderItems">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Totals -->
+      <div class="totals" id="totalsBlock">
+        <div class="totals-row">
+          <span>Subtotal</span>
+          <span id="subtotalVal" class="val" style="font-family:var(--font-mono)">€0.00</span>
+        </div>
+        <div class="totals-row">
+          <span>Shipping</span>
+          <span id="shippingVal" style="font-family:var(--font-mono)">€4.50</span>
+        </div>
+        <div class="totals-row grand">
+          <span>Total</span>
+          <span id="grandVal" class="val">€0.00</span>
+        </div>
+      </div>
+
+      <button type="submit" class="place-order-btn" id="placeBtn" onclick="placeOrder()">
+        <i class="ti ti-lock"></i> Place order
+      </button>
+
+    </aside>
+
+  </div>
+
+  <!-- Success overlay -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <svg class="success-vinyl" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="38" fill="#1A1612"/>
+        <circle cx="40" cy="40" r="30" fill="none" stroke="#2a2520" stroke-width="1.5"/>
+        <circle cx="40" cy="40" r="22" fill="none" stroke="#2a2520" stroke-width="1.2"/>
+        <circle cx="40" cy="40" r="14" fill="#C9A84C" opacity=".6"/>
+        <circle cx="40" cy="40" r="6"  fill="#C9A84C"/>
+        <circle cx="40" cy="40" r="2.5" fill="#1A1612"/>
+      </svg>
+      <h2>Order placed!</h2>
+      <p>Thanks for shopping at Groove & Grain.<br>A confirmation is on its way to your inbox.</p>
+      <div class="order-num" id="orderNum">Order #GG-000000</div>
+      <a href="index.html" class="success-home" onclick="clearCart()">Back to the shop →</a>
+    </div>
+  </div>
+</section>
+  
+    <!-- Cart -->
+ <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <aside class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2>Your Cart</h2>
+    <button class="close-btn" onclick="toggleCart()" aria-label="Close cart">
+      <i class="ti ti-x"></i>
+</button>
+  </div>
+
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <i class="ti ti-vinyl" aria-hidden="true" class="cart-empty-icon" style="font-size:2.5rem;opacity:.3;color:var(--warm-gray)"></i>
+      <p>your cart is empty</p>
+    </div>
+  </div>
+
+<!-- Cart Footer -->
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cartTotal">€0.00</span>
+    </div>
+    <button class="checkout-btn" id="proceedToCheckoutBtn">Proceed to checkout →</button>
+    <button class="continue-btn" onclick="toggleCart()">Continue browsing</button>
+  </div>
+</div>
+</aside>
+
+
+  </main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <!-- Top decorative vinyl strip -->
+  <div class="footer-vinyl-strip">
+    <svg viewBox="0 0 80 80" width="48" height="48" class="footer-vinyl-icon"><circle cx="40" cy="40" r="38" fill="#2a2520"/><circle cx="40" cy="40" r="30" fill="none" stroke="#3a3530" stroke-width="1"/><circle cx="40" cy="40" r="22" fill="none" stroke="#3a3530" stroke-width="1"/><circle cx="40" cy="40" r="14" fill="#B8392B" opacity=".7"/><circle cx="40" cy="40" r="5" fill="#2a2520"/><circle cx="40" cy="40" r="2" fill="#888"/></svg>
+    <svg viewBox="0 0 80 80" width="32" height="32" class="footer-vinyl-icon" style="opacity:.4"><circle cx="40" cy="40" r="38" fill="#2a2520"/><circle cx="40" cy="40" r="14" fill="#C9A84C" opacity=".5"/><circle cx="40" cy="40" r="5" fill="#2a2520"/></svg>
+    <div class="footer-rule"></div>
+    <svg viewBox="0 0 80 80" width="32" height="32" class="footer-vinyl-icon" style="opacity:.4"><circle cx="40" cy="40" r="38" fill="#2a2520"/><circle cx="40" cy="40" r="14" fill="#C9A84C" opacity=".5"/><circle cx="40" cy="40" r="5" fill="#2a2520"/></svg>
+    <svg viewBox="0 0 80 80" width="48" height="48" class="footer-vinyl-icon"><circle cx="40" cy="40" r="38" fill="#2a2520"/><circle cx="40" cy="40" r="30" fill="none" stroke="#3a3530" stroke-width="1"/><circle cx="40" cy="40" r="22" fill="none" stroke="#3a3530" stroke-width="1"/><circle cx="40" cy="40" r="14" fill="#B8392B" opacity=".7"/><circle cx="40" cy="40" r="5" fill="#2a2520"/><circle cx="40" cy="40" r="2" fill="#888"/></svg>
+  </div>
+
+  <div class="footer-body">
+    <!-- Brand -->
+    <div class="footer-brand">
+      <div class="footer-logo">Groove<span>&amp;</span>Grain</div>
+      <p class="footer-tagline">Curated vinyl for the<br>discerning ear. Since 2019.</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Instagram" class="social-link"><i class="ti ti-brand-instagram"></i></a>
+        <a href="#" aria-label="Telegram" class="social-link"><i class="ti ti-brand-telegram"></i></a>
+        <a href="#" aria-label="VK" class="social-link"><i class="ti ti-brand-vk"></i></a>
+      </div>
+    </div>
+
+        <!-- Newsletter -->
+    <div class="footer-col footer-newsletter">
+      <h4 class="footer-col-title">Join the Crate</h4>
+      <p class="footer-newsletter-text">New drops, rare finds &amp; listening notes — straight to your inbox.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="your@email.com" class="newsletter-input">
+        
+        <button class="newsletter-btn" onclick="sendNewsletterSubscription()">→</button>
+      </div>
+      <p class="footer-address"><i class="ti ti-map-pin" style="font-size:.85rem"></i> Dublin, Arbat Street 12, Building 2</p>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="footer-bar">
+    <span class="footer-copy">© 2026 Groove &amp; Grain. All rights reserved.</span>
+    <span class="footer-mono">— Vinyl is forever —</span>
+    <span class="footer-copy">Privacy · Terms</span>
+  </div>
+</footer>
+
+</body>
+</html>
