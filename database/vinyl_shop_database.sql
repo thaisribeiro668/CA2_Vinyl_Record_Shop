@@ -200,3 +200,33 @@ CREATE TABLE checkout_submissions (
 );
 
 SELECT * FROM checkout_submissions;
+
+CREATE TABLE newsletter_email (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL
+    );
+    
+SELECT * FROM products;
+
+UPDATE products
+SET genre = 'Rock'
+WHERE id = 12;
+
+ALTER TABLE products
+MODIFY COLUMN id INT NOT NULL AUTO_INCREMENT;
+
+INSERT INTO products (title, artist, genre, price, badge, image_url, releaseDate)
+VALUES
+  ('Whitney', 'Whitney Houston', '', 28.00, 'Limited', '', ''),
+  ('Novanta', 'Luciano Pavarotti', '', 42.00, 'Classical', '', ''),
+  ('Gorillaz', 'Gorillaz', '', 41.00, 'Hot', '', '');
+
+UPDATE products
+SET genre = 'Electronic'
+WHERE id = 16;
+
+UPDATE products
+SET genre = 'Soul'
+WHERE id = 14;
+
+SELECT * FROM products;

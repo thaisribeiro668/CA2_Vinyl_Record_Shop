@@ -1,5 +1,6 @@
+// Informing what extensions the server needs to be able to run
+// For example, dotenv for saving secrets, mysql (database), express (node framework), cors (to take care of controls which websites are allowed to talk to the backend)
 require("dotenv").config();
-
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -8,20 +9,25 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-// MySQL connection
+// MySQL connection: the server access the env file with the credentials to access MySql vynil_store database
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
 });
-
+// In case of connection error
 db.connect((err) => {
   if (err) throw err;
   console.log("MySQL connected");
 });
 
-// Apple Music API call for album data
+// Apple Music API call: in this function, encodeURIComponent converts the artist name and album title into a safe URL format
+// in order to make a correct API call to Apple API
+// After the call, if not successful, an error message will be shown and the fallback image from the images folder will be used,
+// Considering it was not possible to get the image from Apple API
+// If the call is successful, the imageURL, genre and release date will be gotten from the results receive from the API and be
+// returned through the function. The image is set to be returned in the exact size it will be used by the front end
 async function getAppleAlbumData(artist, album) {
   try {
     const query = encodeURIComponent(`${artist} ${album}`);
@@ -70,7 +76,13 @@ async function getAppleAlbumData(artist, album) {
   }
 }
 
-// Discogs call for market price data
+// Discogs call: a call is made to this API n order to get the market price of the vinyl
+// To set up this call, I had to register in their API website and generate a token
+// This token must be used in the headers of the request for the data or a non authorized error will show up
+// After the first call for the API, an release ID or Master ID is obtained from the results and then it is used for the next call
+// that will receive the data with the market price. The market price can be a median price or the lowest price
+// Sometimes the album will only have the lowest price available because of its low availability (some vynil records are rare)
+// The market price used in the front end will be the median price if available for the record, if it's not available then the lowest price will be used
 async function getDiscogsMarketPrice(artist, album) {
   try {
     const query = encodeURIComponent(`${artist} ${album}`);
@@ -108,7 +120,7 @@ async function getDiscogsMarketPrice(artist, album) {
 
     for (const id of targetIds) {
       const statsUrl = `https://api.discogs.com/marketplace/stats/${id}`;
-      console.log("💰 Discogs STATS URL:", statsUrl);
+      console.log(" Discogs STATS URL:", statsUrl);
 
       const statsResponse = await fetch(statsUrl, {
         headers: {
@@ -127,7 +139,7 @@ async function getDiscogsMarketPrice(artist, album) {
       }
 
       const statsData = await statsResponse.json();
-      console.log("💰 Discogs STATS DATA:", statsData);
+      console.log("Discogs STATS DATA:", statsData);
 
       marketPrice =
         statsData.median_price?.value ?? statsData.lowest_price?.value ?? null;
@@ -135,7 +147,7 @@ async function getDiscogsMarketPrice(artist, album) {
       if (marketPrice) break;
     }
 
-    console.log("✅ Market price for:", artist, album, { marketPrice });
+    console.log(" Market price for:", artist, album, { marketPrice });
     return { marketPrice };
   } catch (error) {
     console.error("Error fetching Discogs market price:", error);
@@ -287,6 +299,41 @@ app.post("/api/checkout", (req, res) => {
     postcode,
     country,
   ];
+
+  // Execute the MySQL query using your connection instance ('db')
+  db.query(sqlQuery, values, (error, results) => {
+    if (error) {
+      console.error("MySQL Database Error:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to store submission data inside database." });
+    }
+
+    // Respond back to frontend that insertion succeeded
+    return res.status(201).json({
+      message: "Order data stored successfully!",
+      submissionId: results.insertId,
+    });
+  });
+});
+
+// NEWSLETTER EMAIL SUBMISSION - POST REQUEST
+app.post("/api/newsletter", (req, res) => {
+  // Destructure the payload properties coming from the frontend (req.body)
+  const { email } = req.body;
+
+  // Basic validation fallback
+  if (!email) {
+    return res.status(400).json({ error: "Missing required checkout fields." });
+  }
+
+  const sqlQuery = `
+    INSERT INTO newsletter_email 
+    (email) 
+    VALUES (?)
+  `;
+
+  const values = [email];
 
   // Execute the MySQL query using your connection instance ('db')
   db.query(sqlQuery, values, (error, results) => {

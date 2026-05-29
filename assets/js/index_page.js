@@ -265,6 +265,7 @@ if (params.get("openCart") === "1") {
   }, 200);
 }
 
+// PROCEED TO CHECK OUT
 document
   .getElementById("proceedToCheckoutBtn")
   .addEventListener("click", function () {
@@ -278,7 +279,7 @@ document
     window.location.href = "checkout_page.html#checkout-page";
   });
 
-function sendNewsletterSubscription() {
+async function sendNewsletterSubscription() {
   // Finds the input field using the class name from your HTML
   const newsletterInput = document.querySelector(".newsletter-input");
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -289,8 +290,29 @@ function sendNewsletterSubscription() {
   // Correct syntax: regexPattern.test(stringToTest)
   if (!emailPattern.test(emailValue)) {
     showToast("Please enter a valid email address.");
-  } else {
-    showToast("Thank you for subscribing to our newsletter!");
-    newsletterInput.value = ""; // Clears the input field box on success
+    return;
+  }
+
+  const formData = { email: emailValue };
+
+  try {
+    const response = await fetch("http://localhost:3000/api/newsletter", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      showToast("Thank you for subscribing to our newsletter!");
+      newsletterInput.value = "";
+    } else {
+      showToast("Subscription failed. Please try again.");
+    }
+
+  } catch (error) {
+    console.error("Network Error:", error);
+    showToast("Could not connect to the database server.");
   }
 }

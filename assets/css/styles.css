@@ -979,14 +979,19 @@ nav {
 }
 
 
-/* PRODUCTS PAGE STYLES */
+/* PRODUCT DETAIL PAGE STYLES */
+.product-page-detail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .product-detail-layout {
     display: grid;
-    grid-template-columns: 1.2fr 1.8fr;
+    grid-template-columns: 1.9fr 1.8fr;
     gap: 2.5rem;
     align-items: flex-start;
     max-width: 960px;
-    margin-left: 10rem;
+    margin: 2rem 0rem 2rem 0rem;
 }
 
 .product-detail-image img {
@@ -1022,16 +1027,14 @@ nav {
 .detail-market-price,
 .detail-release {
     margin-bottom: .5rem;
-    font-size: .9rem;
+    font-size: 1rem;
 }
 
 .detail-badge {
-    font-size: .9rem;
-    /* same as genre line */
+    font-size: 1rem;
     font-family: 'DM Sans', sans-serif;
     color: var(--ink);
     margin-bottom: .5rem;
-    /* same vertical rhythm */
 }
 
 .detail-badge span {

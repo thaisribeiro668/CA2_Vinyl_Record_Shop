@@ -103,14 +103,14 @@ function selectTab(btn, type) {
 }
 
 // ── Card formatting ──
-function fmtCard(el) {
-  let v = el.value.replace(/\D/g, "").substring(0, 16);
-  el.value = v.replace(/(.{4})/g, "$1 ").trim();
+function formatCard(element) {
+  let cardNumber = element.value.replace(/\D/g, "").substring(0, 16);
+  element.value = cardNumber.replace(/(.{4})/g, "$1 ").trim();
 }
-function fmtExpiry(el) {
-  let v = el.value.replace(/\D/g, "").substring(0, 4);
-  if (v.length >= 3) v = v.substring(0, 2) + " / " + v.substring(2);
-  el.value = v;
+function formatExpiry(element) {
+  let cardExpiry = element.value.replace(/\D/g, "").substring(0, 4);
+  if (cardExpiry.length >= 3) cardExpiry = cardExpiry.substring(0, 2) + " / " + cardExpiry.substring(2);
+  element.value = cardExpiry;
 }
 
 // VALIDATION - id = tagid

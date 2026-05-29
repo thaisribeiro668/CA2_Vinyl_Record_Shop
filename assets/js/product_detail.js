@@ -32,7 +32,7 @@ async function loadProduct() {
     // Format release date nicely
     const inCart = cart.find((item) => item.id === product.id);
     const release = product.releaseDate
-      ? new Date(product.releaseDate).toLocaleDateString()
+      ? new Date(product.releaseDate).toLocaleDateString("en-IE")
       : "Unknown";
 
     const html = String.raw;
@@ -62,7 +62,7 @@ async function loadProduct() {
           </p>
 
           <p class="detail-release">Release date: ${release}</p>
-
+        
           <button
             class="return-btn ${inCart ? "added" : ""}"
             id="btn-${product.id}"
@@ -70,6 +70,7 @@ async function loadProduct() {
           >
             ${inCart ? "Added" : "Add to Cart"}
           </button>
+          
         </div>
       </div>
     `;
