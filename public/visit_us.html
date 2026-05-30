@@ -6,7 +6,7 @@
     <title>Groove & Grain - Vinyl Record Shop</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <script src="/assets/js/product_detail.js" defer></script>
+    <script src="/assets/js/visit_about.js" defer></script>
 </head>
 
 <body>
@@ -17,6 +17,9 @@
 
         <!-- Navigation area -->
         <nav>
+            <!-- Hamburger menu for small screens -->
+            <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox">
+            <label for="nav-toggle" class="nav-toggle-label">&#9776;</label>
             <!-- Navigation Links -->
             <div class="nav-center">
                 <ul class="nav-links">
@@ -220,7 +223,7 @@
                 </p>
                 <div class="newsletter-form">
                     <input type="email" placeholder="your@email.com" class="newsletter-input">
-                    <button class="newsletter-btn">→</button>
+                    <button class="newsletter-btn" onclick="sendNewsletterSubscription()">→</button>
                 </div>
                 <p class="footer-address"><i class="ti ti-map-pin" style="font-size:.85rem"></i> Dublin, Arbat Street
                     12, Building 2</p>
@@ -234,5 +237,6 @@
             <span class="footer-copy">Privacy · Terms</span>
         </div>
     </footer>
+    <div id="toast" class="toast"></div>
 </body>
 </html>

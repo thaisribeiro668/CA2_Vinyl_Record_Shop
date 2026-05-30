@@ -18,6 +18,9 @@
 
         <!-- Navigation area -->
         <nav>
+            <!-- Hamburger menu for small screens -->
+            <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox">
+            <label for="nav-toggle" class="nav-toggle-label">&#9776;</label>
             <!-- Navigation Links -->
             <div class="nav-center">
                 <ul class="nav-links">
@@ -202,7 +205,6 @@
                 </p>
                 <div class="newsletter-form">
                     <input type="email" placeholder="your@email.com" class="newsletter-input">
-
                     <button class="newsletter-btn" onclick="sendNewsletterSubscription()">→</button>
                 </div>
                 <p class="footer-address"><i class="ti ti-map-pin" style="font-size:.85rem"></i> Dublin, Arbat Street
@@ -219,4 +221,5 @@
     </footer>
     <div class="toast" id="toast"></div>
 </body>
+
 </html>
