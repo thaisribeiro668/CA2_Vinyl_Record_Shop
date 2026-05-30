@@ -76,11 +76,11 @@ async function getAppleAlbumData(artist, album) {
   }
 }
 
-// Discogs call: a call is made to this API n order to get the market price of the vinyl
+// Discogs call: a call is made to this API in order to get the market price of the vinyl record
 // To set up this call, I had to register in their API website and generate a token
-// This token must be used in the headers of the request for the data or a non authorized error will show up
+// This token must be used in the headers of the request for the data or an error informing that the request was not authorized will show up
 // After the first call for the API, an release ID or Master ID is obtained from the results and then it is used for the next call
-// that will receive the data with the market price. The market price can be a median price or the lowest price
+// that will then receive the data with the market price. The market price can be a median price or the lowest price for the record
 // Sometimes the album will only have the lowest price available because of its low availability (some vynil records are rare)
 // The market price used in the front end will be the median price if available for the record, if it's not available then the lowest price will be used
 async function getDiscogsMarketPrice(artist, album) {
@@ -156,24 +156,27 @@ async function getDiscogsMarketPrice(artist, album) {
 }
 
 // Routes
-// GETTING ALL PRODUCTS
+// GETTING ALL THE PRODUCTS: the first thing this function does it to send a query do MySQL database to receive all the data that is into the products table
+// Once it has results, it will then check if image_url is available in the results that came from the database
+// If it's not available, it will call Apple API, get this data from there and save it on MySQL database
+// By doing it, the API will be only called when it's necessary, which improves the performance of the website
 app.get("/products", async (req, res) => {
   try {
     const [productsFromDB] = await db.promise().query("SELECT * FROM products");
-
+    // Getting Data from MySQL database
     const completeProducts = await Promise.all(
       productsFromDB.map(async (product) => {
         if (product.image_url) {
           return { ...product, image: product.image_url };
         }
 
-        // Fetch data object from Apple API
+        // Fetching data object from Apple API
         const appleData = await getAppleAlbumData(
           product.artist,
           product.title,
         );
 
-        // ✅ FIXED: Save ONLY the image string to the database
+        // Saving the imageURL string to the database
         await db
           .promise()
           .query("UPDATE products SET image_url = ? WHERE id = ?", [
@@ -181,10 +184,12 @@ app.get("/products", async (req, res) => {
             product.id,
           ]);
 
+        // Returning a copy of the products array and the image from Apple API (if necessary)
         return { ...product, image: appleData.image };
       }),
     );
 
+    // Returning the products with all the fields
     res.json(completeProducts);
   } catch (err) {
     console.error("Error fetching products:", err);
@@ -192,7 +197,15 @@ app.get("/products", async (req, res) => {
   }
 });
 
-// GETTING A SINGLE PRODUCT BY ID
+// GETTING A SINGLE PRODUCT BY ID - PRODUCTS DETAILS PAGE
+// In this route, first a call to MySQL database is done requesting information of one product using its Id as identifier
+// The ID comes from the front end and "params" is the value that Express extracts from the request
+// Then it's verified if the fields image, genre and release data has value from the database.
+// If not, an API call is done to the Apple API to get this information and save on MySQL database, which improves the website performance
+// Considering the API will be only called when necessary
+// The next step is the call to the Discologs API to get the market price of the product
+// This information is not saved in the database, because it can change very often
+// After this call, all the information obtained from MySQL database and the API calls is stored inside a the fullProduct const and is returned by the function
 app.get("/products/:id", async (req, res) => {
   try {
     const [productsFromDB] = await db
@@ -263,8 +276,12 @@ app.get("/products/:id", async (req, res) => {
 });
 
 // CHECKOUT FORM SUBMISSION - POST REQUEST
+// In this Post request, the data that comes from the front end through the body of the request (req.body) is destructured to be easily worked on
+// After that, a validation is run to check if all the necessary fields to update the checkout_submissions are coming
+// Then the query to insert the data inside MySQL database is done and if successful, it will inform the frontend that
+// the data was stored successfully
 app.post("/api/checkout", (req, res) => {
-  // Destructure the payload properties coming from the frontend (req.body)
+  // Destructuring the payload properties coming from the frontend (req.body)
   const {
     first_name,
     last_name,
@@ -282,25 +299,27 @@ app.post("/api/checkout", (req, res) => {
     return res.status(400).json({ error: "Missing required checkout fields." });
   }
 
+  // The question mark is the placeholder for the value that came from the frontend and will be inserted
   const sqlQuery = `
     INSERT INTO checkout_submissions 
     (first_name, last_name, email, phone, street_address, complement, city, postcode, country) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
+  // Storing the values that came from req.body into the const values to be used in MySql query
   const values = [
     first_name,
     last_name,
     email,
-    phone || null, // default to null if empty,
+    phone || null,
     street_address,
-    complement || null, // default to null if empty
+    complement || null,
     city,
     postcode,
     country,
   ];
 
-  // Execute the MySQL query using your connection instance ('db')
+  // Executing the MySQL query using the connection instance ('db') and the values that came from the front end
   db.query(sqlQuery, values, (error, results) => {
     if (error) {
       console.error("MySQL Database Error:", error);
@@ -318,6 +337,10 @@ app.post("/api/checkout", (req, res) => {
 });
 
 // NEWSLETTER EMAIL SUBMISSION - POST REQUEST
+// This post request sends the email obtained from the newsletter input that comes from the front end and saves it
+// in the newsletter_email table on vynil_store database
+// It starts by getting the payload from the front end, saving it into a const and then sending the query to MySQL
+// If the data submission is successful, a message will be sent to the front end
 app.post("/api/newsletter", (req, res) => {
   // Destructure the payload properties coming from the frontend (req.body)
   const { email } = req.body;
@@ -335,7 +358,7 @@ app.post("/api/newsletter", (req, res) => {
 
   const values = [email];
 
-  // Execute the MySQL query using your connection instance ('db')
+  // Execute the MySQL query using the connection instance ('db') and the email that came from the front end
   db.query(sqlQuery, values, (error, results) => {
     if (error) {
       console.error("MySQL Database Error:", error);
@@ -352,4 +375,5 @@ app.post("/api/newsletter", (req, res) => {
   });
 });
 
+// Defining the port that the server will use
 app.listen(3000, () => console.log("Server running on port 3000"));

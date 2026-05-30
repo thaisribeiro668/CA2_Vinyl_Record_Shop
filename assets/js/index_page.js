@@ -3,20 +3,24 @@ let cart = [];
 let currentGenre = "all";
 let currentSearch = "";
 
-// Function to store the cart of the both pages in local storage
-// //so that the cart is the same on both pages and doesn't reset
-// when going to the product page and back to the main page.
+// Function to load the cart from the local storage
+// By doing that, the cart is the same in all of the pages of the website, avoiding purcharse conflicts
+// If there's items on the cart, parse it into an array, or else, keep it as an empty array
 function loadCartFromStorage() {
   const stored = localStorage.getItem("cart");
   cart = stored ? JSON.parse(stored) : [];
 }
 
+// Function to save the cart in the local storage
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 loadCartFromStorage();
 
+// Function to load all the products from the database
+// The function fetches the data from the /products endpoint, which connects to MySQL database and gets the available data from products table
+// If the call is successfull, the products available in MySQL will be displayed throught the function displayProducts
 async function loadProducts() {
   try {
     const response = await fetch("http://localhost:3000/products");
@@ -29,12 +33,21 @@ async function loadProducts() {
 
 loadProducts();
 
+// Function to Display the Products: first the element from the frontend is selected
+// Then it will show the products that came from the database following criterias:
+// If any genre filter is selected or an existing product title is inserted on the search input
+// it will show following these filters. If not, all the products will be shown
+// There's a tracker that counts how many items are visible and it also considers the filtered results to make the sum
+// Next, it's checked if the product is already in the cart, because if it is, the "Add" button will become "Added"
+// Finally .join transform the product array into a one big string so that the broswer can render it
+// The product count text is updated and if there's no result when a search is done, a message will be shown
+// This is done by controlling the class "search-wrap-hidden" that will become hidden or not according to the result
 function displayProducts() {
   try {
     const grid = document.getElementById("productGrid");
-    //Variable to track how many products are visible after filtering
+    // Variable to track how many products are visible
     let visible = 0;
-    // For each product, check if it matches the current genre and search term
+
     grid.innerHTML = products
       .map((product) => {
         // Determine if the product should be shown based on genre and search filters
@@ -46,6 +59,7 @@ function displayProducts() {
         if (show) visible++;
         // Check if the product is already in the cart
         const inCart = cart.find((item) => item.id === product.id);
+        // Variable created in order to force Prettier extension to format this part of the code
         const html = String.raw;
         return html` <div
           class="product-card${show ? "" : " hidden"}"
@@ -65,7 +79,6 @@ function displayProducts() {
               <span class="card-price"
                 >€${Number(product.price).toFixed(2)}</span
               >
-
               <button
                 class="add-btn${inCart ? " added" : ""}"
                 id="btn-${product.id}"
@@ -78,17 +91,31 @@ function displayProducts() {
         </div>`;
       })
       .join("");
-    //combines all the mapped HTML snippets into one big string so they render correctly inside your cart container.
+    // .join removes the comas from the product array and transform it into one big string so browser can render it properly.
+
+    // Updates the text that shows how many products matched the filters. If there's more than one product than add an "S" to the text
     document.getElementById("resultCount").textContent =
       visible + " record" + (visible !== 1 ? "s" : "");
+
+    // In case there's no results in the search bar, show a message
+    const noResults = document.getElementById("noResults");
+
+    if (visible === 0) {
+      noResults.classList.remove("search-wrap-hidden");
+    } else {
+      noResults.classList.add("search-wrap-hidden");
+    }
   } catch (error) {
     console.error("Error displaying products:", error);
     showToast("Something went wrong while displaying products.");
   }
 }
 
+// Filter Genre button function
+// First, it removes the active class from all buttons and add to the clicked button
+// Then it adds the class Active to the button that was selected by the user
+// Following, it reads the data from the clicked button and the product, store it on currentGenre variable and displays products according to this value
 function filterGenre(button) {
-  // Remove active class from all buttons and add to the clicked button
   document
     .querySelectorAll(".filter-btn")
     .forEach((button) => button.classList.remove("active"));
@@ -98,17 +125,20 @@ function filterGenre(button) {
   displayProducts();
 }
 
+// This function starts in the html input search tag where it says "oninput" use this function
+// This function will then read the value that was inserted in the product and display the products following this value
 function searchRecords(value) {
   currentSearch = value.toLowerCase().trim();
   displayProducts();
 }
 
+// Toggle the 'open' class on the cart sidebar to show/hide it
 function toggleCart() {
-  // Toggle the 'open' class on the cart sidebar to show/hide it
   document.getElementById("cartSidebar").classList.toggle("open");
   document.getElementById("cartOverlay").classList.toggle("open");
 }
 
+// Function to show temporary messages like "Product Added to the cart" or "Product removed from the cart"
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
@@ -118,6 +148,10 @@ function showToast(message) {
   setTimeout(() => toast.classList.remove("show"), 2200);
 }
 
+// Function to add a product to the cart: if products array is not empty, find the product by ID
+// If it is found, check if it's not already in the cart and if it is not, add the product to the cart variable
+// The text of the button is changed to Added, it's class is also changed to added to specific formatting
+// Then the cart is saved, updated, become visible in the page and a temporary message is shown
 function addToCart(id) {
   try {
     // Check if products array is empty
@@ -154,6 +188,13 @@ function addToCart(id) {
   console.log("Trying to add ID:", id);
 }
 
+// Function to remove a product from cart: first it uses the filter function with this condition:
+// If the item’s ID is not equal to the product wanted to remove, keep it
+// If the item’s ID matches, remove it
+// Then save the cart and find the button for that specific product, so it can be changed to "Add" text again
+// Following, the specific product data is stored into a variable so its title can be used in the temporary message
+// that informs that the item was sucessfully removed
+// Finnally, calls updateCart function and shows the temporary message
 function removeFromCart(productId) {
   // Remove the product from the cart by filtering it out
   cart = cart.filter((item) => item.id !== productId);
@@ -170,8 +211,13 @@ function removeFromCart(productId) {
   showToast('"' + product.title + '" removed from cart');
 }
 
+// Function to Update the Quantity of Products in the cart
+// First look for the product by its ID, then convert the quantity inserted by the user to Integer
+// Show a message if it is not a number or quatity is less than 1
+// Then update the quantity according to the quantity informed by the user
+// Save and update the cart
 function updateQty(id, newQty) {
-  const item = cart.find((p) => p.id === id);
+  const item = cart.find((product) => product.id === id);
   if (!item) return;
 
   const qty = parseInt(newQty);
@@ -185,13 +231,20 @@ function updateQty(id, newQty) {
   updateCart();
 }
 
+// Function to update the cart: first the count variable will store the sum of all the items that are in the cart and return
+// the total number of items in the card
+// Following that, it will select the cart button and the cart couter of items
+// If items to be counted exists, the cart counter will be updated
+// The total will be calculated considering prices * qty and the correspondent html element will be updated
+// Then cartItems element will be selected and if there's no items in the cart a message will be shown
+// And if there are items in the cart the products will be shown according to the html informed
 function updateCart() {
   try {
     const count = cart.reduce((sum, item) => sum + item.qty, 0);
     // Header cart button
     document.getElementById("cartCount").textContent = count;
 
-    // Filters cart button - check
+    // Filters cart button
     const filterCount = document.getElementById("cartCountFilter");
     // Update the filter cart count if the element exists
     if (filterCount) filterCount.textContent = count;
@@ -203,6 +256,7 @@ function updateCart() {
     const element = document.getElementById("cartItems");
 
     if (cart.length === 0) {
+      // Variable created to force Prettier extension to format this part of the code
       const html = String.raw;
       element.innerHTML = html` <div class="cart-empty">
         <i
@@ -256,7 +310,7 @@ function updateCart() {
 displayProducts();
 updateCart();
 
-// After initial render, check if we should auto-open the cart
+// After initial render, check if it is necessary to auto-open the cart
 const params = new URLSearchParams(window.location.search);
 if (params.get("openCart") === "1") {
   // small timeout so DOM & cart render first
@@ -265,11 +319,13 @@ if (params.get("openCart") === "1") {
   }, 200);
 }
 
-// PROCEED TO CHECK OUT
+// Proceed to Checkout Button Function: an Event Listener was added to the button and when a click happens
+// It will be checked if there are products in the cart.
+// If there are products in the cart, the user will be redirected to the Checkout Page
 document
   .getElementById("proceedToCheckoutBtn")
   .addEventListener("click", function () {
-    // Check the global cart array that your script is already maintaining
+    // Check the global cart array that the script is already maintaining
     if (cart.length === 0) {
       alert("Your cart is empty! Add some vinyl records before checking out.");
       return; // Stops execution completely
@@ -279,15 +335,20 @@ document
     window.location.href = "checkout_page.html#checkout-page";
   });
 
+// Function to send the user's newsletter email to the MySQL database
+// First it, selects the input field using the class name from HTML
+// Then it compares the value that was inserted by the user with the Regex of an email address
+// If an invalid email was inserted, a notification message will be shown
+// If a valid email was inserted, then a POST request will be done to the MySQL database using the email informed by the user
+// The fetch function is used to access the server endpoint, together with the method that will be used and the email that will be converted into a string
+// If the operation was successfull or not, an appropriate message will be shown to the user
 async function sendNewsletterSubscription() {
-  // Finds the input field using the class name from your HTML
   const newsletterInput = document.querySelector(".newsletter-input");
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Clean up the text input value
+  // Removes spaces in the text input value
   const emailValue = newsletterInput.value.trim();
 
-  // Correct syntax: regexPattern.test(stringToTest)
   if (!emailPattern.test(emailValue)) {
     showToast("Please enter a valid email address.");
     return;
@@ -310,7 +371,6 @@ async function sendNewsletterSubscription() {
     } else {
       showToast("Subscription failed. Please try again.");
     }
-
   } catch (error) {
     console.error("Network Error:", error);
     showToast("Could not connect to the database server.");

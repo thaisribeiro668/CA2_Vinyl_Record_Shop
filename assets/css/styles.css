@@ -566,6 +566,10 @@ nav {
     border-color: var(--ink);
 }
 
+.search-wrap-hidden {
+  display: none;
+}
+
 .search-icon {
     position: absolute;
     left: .65rem;
