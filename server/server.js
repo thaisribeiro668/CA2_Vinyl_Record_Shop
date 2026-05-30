@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-// MySQL connection: the server access the env file with the credentials to access MySql vynil_store database
+// MySQL connection: the server access the env file with the credentials to access MySql vinyl_store database
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -81,7 +81,7 @@ async function getAppleAlbumData(artist, album) {
 // This token must be used in the headers of the request for the data or an error informing that the request was not authorized will show up
 // After the first call for the API, an release ID or Master ID is obtained from the results and then it is used for the next call
 // that will then receive the data with the market price. The market price can be a median price or the lowest price for the record
-// Sometimes the album will only have the lowest price available because of its low availability (some vynil records are rare)
+// Sometimes the album will only have the lowest price available because of its low availability (some vinyl records are rare)
 // The market price used in the front end will be the median price if available for the record, if it's not available then the lowest price will be used
 async function getDiscogsMarketPrice(artist, album) {
   try {
@@ -338,7 +338,7 @@ app.post("/api/checkout", (req, res) => {
 
 // NEWSLETTER EMAIL SUBMISSION - POST REQUEST
 // This post request sends the email obtained from the newsletter input that comes from the front end and saves it
-// in the newsletter_email table on vynil_store database
+// in the newsletter_email table on vinyl_store database
 // It starts by getting the payload from the front end, saving it into a const and then sending the query to MySQL
 // If the data submission is successful, a message will be sent to the front end
 app.post("/api/newsletter", (req, res) => {

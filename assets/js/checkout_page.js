@@ -3,7 +3,7 @@ let cart = [];
 let discountApplied = false;
 
 // Function to load the cart from the local storage
-// By doing that, the cart is the same in all of the pages of the website, avoiding purcharse conflicts
+// By doing that, the cart is the same in all of the pages of the website, avoiding purchase conflicts
 // If there's items on the cart, parse it into an array, or else, keep it as an empty array
 function loadCartFromStorage() {
   const stored = localStorage.getItem("cart");
@@ -22,7 +22,7 @@ function clearCart() {
 
 // Function to Render order items
 // First it get the cart from the local storage, then select the html elements that will be used
-// If cart isnt't empty and html elements are available, show the items that are currently in the cart
+// If cart isn't empty and html elements are available, show the items that are currently in the cart
 // Update the total of the order
 function renderOrder() {
   loadCartFromStorage();
@@ -349,7 +349,7 @@ function showToast(msg) {
 // ASIDE SIDEBAR LOGIC
 // Function to update the cart: first the count variable will store the sum of all the items that are in the cart and return
 // the total number of items in the card
-// Following that, it will select the cart button and the cart couter of items
+// Following that, it will select the cart button and the cart count of items
 // If items to be counted exists, the cart counter will be updated
 // The total will be calculated considering prices * qty and the correspondent html element will be updated
 // Then cartItems element will be selected and if there's no items in the cart a message will be shown
@@ -422,8 +422,8 @@ function toggleCart() {
 // If the item’s ID matches, remove it
 // Then save the cart and find the button for that specific product, so it can be changed to "Add" text again
 // Following, the specific product data is stored into a variable so its title can be used in the temporary message
-// that informs that the item was sucessfully removed
-// Finnally, calls updateCart function and shows the temporary message
+// that informs that the item was successfully removed
+// Finally, calls updateCart function and shows the temporary message
 function removeFromCart(productId) {
   const removedItem = cart.find((item) => item.id === productId);
   cart = cart.filter((item) => item.id !== productId);
@@ -457,7 +457,7 @@ updateCart();
 // If an invalid email was inserted, a notification message will be shown
 // If a valid email was inserted, then a POST request will be done to the MySQL database using the email informed by the user
 // The fetch function is used to access the server endpoint, together with the method that will be used and the email that will be converted into a string
-// If the operation was successfull or not, an appropriate message will be shown to the user
+// If the operation was successful or not, an appropriate message will be shown to the user
 function sendNewsletterSubscription() {
   // Finds the input field using the class name from your HTML
   const newsletterInput = document.querySelector(".newsletter-input");

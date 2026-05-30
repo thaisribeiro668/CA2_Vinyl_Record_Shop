@@ -4,7 +4,7 @@ let badge = "New";
 let currentSearch = "";
 
 // Function to load the cart from the local storage
-// By doing that, the cart is the same in all of the pages of the website, avoiding purcharse conflicts
+// By doing that, the cart is the same in all of the pages of the website, avoiding purchase conflicts
 // If there's items on the cart, parse it into an array, or else, keep it as an empty array
 function loadCartFromStorage() {
   const stored = localStorage.getItem("cart");
@@ -20,7 +20,7 @@ loadCartFromStorage();
 
 // Function to load all the products from the database
 // The function fetches the data from the /products endpoint, which connects to MySQL database and gets the available data from products table
-// If the call is successfull, the products available in MySQL will be displayed throught the function displayProducts
+// If the call is successful, the products available in MySQL will be displayed thought the function displayProducts
 async function loadProducts() {
   try {
     const response = await fetch("http://localhost:3000/products");
@@ -34,14 +34,14 @@ async function loadProducts() {
 loadProducts();
 
 // Function to Display the Products: first the element from the frontend is selected
-// Then it will show the products that came from the database following criterias:
+// Then it will show the products that came from the database following criteria:
 // If any genre filter is selected or an existing product title is inserted on the search input
 // it will show following these filters. If not, all the products will be shown
 // As this is the script for the New Arrivals page, the filter is defined to get the products
 // with badge "New"
 // There's a tracker that counts how many items are visible and it also considers the filtered results to make the sum
 // Next, it's checked if the product is already in the cart, because if it is, the "Add" button will become "Added"
-// Finally .join transform the product array into a one big string so that the broswer can render it
+// Finally .join transform the product array into a one big string so that the browser can render it
 // The product count text is updated and if there's no result when a search is done, a message will be shown
 // This is done by controlling the class "search-wrap-hidden" that will become hidden or not according to the result
 function displayProducts() {
@@ -197,8 +197,8 @@ function addToCart(id) {
 // If the item’s ID matches, remove it
 // Then save the cart and find the button for that specific product, so it can be changed to "Add" text again
 // Following, the specific product data is stored into a variable so its title can be used in the temporary message
-// that informs that the item was sucessfully removed
-// Finnally, calls updateCart function and shows the temporary message
+// that informs that the item was successfully removed
+// Finally, calls updateCart function and shows the temporary message
 function removeFromCart(productId) {
   // Remove the product from the cart by filtering it out
   cart = cart.filter((item) => item.id !== productId);
@@ -217,7 +217,7 @@ function removeFromCart(productId) {
 
 // Function to Update the Quantity of Products in the cart
 // First look for the product by its ID, then convert the quantity inserted by the user to Integer
-// Show a message if it is not a number or quatity is less than 1
+// Show a message if it is not a number or quantity is less than 1
 // Then update the quantity according to the quantity informed by the user
 // Save and update the cart
 function updateQty(id, newQty) {
@@ -237,7 +237,7 @@ function updateQty(id, newQty) {
 
 // Function to update the cart: first the count variable will store the sum of all the items that are in the cart and return
 // the total number of items in the card
-// Following that, it will select the cart button and the cart couter of items
+// Following that, it will select the cart button and the cart counter of items
 // If items to be counted exists, the cart counter will be updated
 // The total will be calculated considering prices * qty and the correspondent html element will be updated
 // Then cartItems element will be selected and if there's no items in the cart a message will be shown
@@ -345,7 +345,7 @@ document
 // If an invalid email was inserted, a notification message will be shown
 // If a valid email was inserted, then a POST request will be done to the MySQL database using the email informed by the user
 // The fetch function is used to access the server endpoint, together with the method that will be used and the email that will be converted into a string
-// If the operation was successfull or not, an appropriate message will be shown to the user
+// If the operation was successful or not, an appropriate message will be shown to the user
 function sendNewsletterSubscription() {
   // Finds the input field using the class name from your HTML
   const newsletterInput = document.querySelector(".newsletter-input");
