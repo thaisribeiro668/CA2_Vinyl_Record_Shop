@@ -20,7 +20,10 @@ function clearCart() {
   localStorage.removeItem("cart");
 }
 
-// Render order items //
+// Function to Render order items
+// First it get the cart from the local storage, then select the html elements that will be used
+// If cart isnt't empty and html elements are available, show the items that are currently in the cart
+// Update the total of the order
 function renderOrder() {
   loadCartFromStorage();
   const layout = document.getElementById("checkoutLayout");
@@ -36,6 +39,7 @@ function renderOrder() {
 
   const container = document.getElementById("orderItems");
   if (container) {
+    // Variable created to force Prettier extension to format this part of the code
     const html = String.raw;
     container.innerHTML = cart
       .map(
@@ -78,9 +82,10 @@ function renderOrder() {
   updateTotals();
 }
 
-// Totals
+// Totals: function that sums the values of all the items in the cart/checkout page
+// It adds shipping cost to the final price
 function updateTotals() {
-  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const subtotal = cart.reduce((subtotalSoFar, cartItem) => subtotalSoFar + cartItem.price * cartItem.qty, 0);
   const grand = subtotal + SHIPPING;
 
   const subtotalEl = document.getElementById("subtotalVal");
@@ -92,7 +97,9 @@ function updateTotals() {
   if (grandEl) grandEl.textContent = "€" + grand.toFixed(2);
 }
 
-// Payment tabs
+// Payment tabs: function that controls the hover effect and the phrase or grid that is shown
+// according to the type of payment that the user chooses
+// If user chooses payment by card, then the card grid form will show up
 function selectTab(btn, type) {
   document
     .querySelectorAll(".pay-tab")
@@ -106,30 +113,58 @@ function selectTab(btn, type) {
     type === "bank" ? "block" : "none";
 }
 
-// Card formatting
+// Card formatting: function to format the way the card number is shown in the card form
+// It Takes the input value, Removes all non digits .replace(/\D/g, ""), Limits it to 16 digits (substring(0, 16))
+// and Reformats it into groups of 4 digits (/(.{4})/g, "$1 ")  
 function formatCard(element) {
   let cardNumber = element.value.replace(/\D/g, "").substring(0, 16);
   element.value = cardNumber.replace(/(.{4})/g, "$1 ").trim();
 }
+
+// Card formatting: function to format the way the card expiry is shown in the card form
+// It Takes the input value, Removes all non digits .replace(/\D/g, ""), Limits it to 4 digits substring(0, 4)
+// If there are at least 3 digits, it inserts the separator "/"
+// Finally, it writes the formatted value back into the input.
 function formatExpiry(element) {
   let cardExpiry = element.value.replace(/\D/g, "").substring(0, 4);
   if (cardExpiry.length >= 3) cardExpiry = cardExpiry.substring(0, 2) + " / " + cardExpiry.substring(2);
   element.value = cardExpiry;
 }
 
-// VALIDATION - id = tagid
+// FORM VALIDATION
+// Function to validate a single form field
+// First it selects the input element by its ID. If the element doesn't exist
+// (for example, when certain payment fields are hidden), the function returns true
+// so the validation flow can continue normally.
+// Then it trims the input value and checks it against the provided pattern.
+// If the value does not match the pattern, a toast message is shown, the field
+// receives focus again, and the function returns false to stop form submission.
+// If the value is valid, the function returns true.
 function validateField(id, pattern, message) {
-  const el = document.getElementById(id);
-  if (!el) return true; // fallback if payment field hidden
-  const value = el.value.trim();
+  const element = document.getElementById(id);
+  if (!element) return true; // fallback if payment field hidden
+  const value = element.value.trim();
   if (!pattern.test(value)) {
     showToast(message);
-    el.focus();
+    element.focus();
     return false;
   }
   return true;
 }
 
+// Function to validate the entire checkout form
+// First it checks all required fields by ID to ensure they exist and are not empty.
+// If any required field is missing or blank, the field is highlighted, focused,
+// a toast message is shown, and the function stops by returning false.
+// After structural checks, the function defines all validation patterns used for
+// names, email, address, phone, postal code, and CVV.
+// Each field is then validated using validateField(), which tests the value
+// against the appropriate pattern. If any validation fails, a toast message is
+// shown and the function returns false.
+// The phone number is optional, so it is validated only when the user enters a value.
+// Finally, if the credit‑card section is visible, the function validates the
+// cardholder name and CVV as well.
+// If all checks pass successfully, the function returns true and the form can proceed.
 function formValidation() {
   // Required structural input checks (Matches exactly your HTML Element IDs)
   const required = [
@@ -209,6 +244,20 @@ function formValidation() {
 }
 
 // Place order
+// Function to submit the checkout order
+// First it runs the full form validation. If any field is invalid, the function
+// stops immediately and the order is not submitted.
+// When validation passes, the "Place order" button is disabled and replaced with
+// a loading spinner to prevent duplicate submissions.
+// The function then collects all form values into a formData object, mapping
+// each field to the expected API property names.
+// A POST request is sent to the backend checkout endpoint. If the request is
+// successful, the cart is cleared, a random order number is generated, and the
+// success overlay is displayed to the user.
+// If the server responds with an error, the error message is shown and the
+// button is re‑enabled so the user can try again.
+// If a network error occurs (e.g., server offline), an alert is shown and the
+// button is restored to its original state.
 async function placeOrder() {
   if (!formValidation()) return;
 

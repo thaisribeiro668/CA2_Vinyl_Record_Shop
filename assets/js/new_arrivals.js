@@ -33,6 +33,17 @@ async function loadProducts() {
 
 loadProducts();
 
+// Function to Display the Products: first the element from the frontend is selected
+// Then it will show the products that came from the database following criterias:
+// If any genre filter is selected or an existing product title is inserted on the search input
+// it will show following these filters. If not, all the products will be shown
+// As this is the script for the New Arrivals page, the filter is defined to get the products
+// with badge "New"
+// There's a tracker that counts how many items are visible and it also considers the filtered results to make the sum
+// Next, it's checked if the product is already in the cart, because if it is, the "Add" button will become "Added"
+// Finally .join transform the product array into a one big string so that the broswer can render it
+// The product count text is updated and if there's no result when a search is done, a message will be shown
+// This is done by controlling the class "search-wrap-hidden" that will become hidden or not according to the result
 function displayProducts() {
   try {
     const grid = document.getElementById("new-arrivals-grid");
@@ -42,6 +53,7 @@ function displayProducts() {
     grid.innerHTML = products
       .map((product) => {
         // Determine if the product should be shown based on genre and search filters
+        // Filter set to badge = "New" so only New Arrivals records is shown
         const show =
           product.badge === "New" &&
           (product.title.toLowerCase().includes(currentSearch) ||
@@ -50,7 +62,8 @@ function displayProducts() {
         if (show) visible++;
         // Check if the product is already in the cart
         const inCart = cart.find((item) => item.id === product.id);
-        const html = String.raw; // putrtin this to prettier be able to indent the html below
+        // Variable created to force Prettier extension to format this part of the code
+        const html = String.raw;
         return html`
           <div
             class="product-card${show ? "" : " hidden"}"
@@ -72,7 +85,6 @@ function displayProducts() {
                 <span class="card-price"
                   >€${Number(product.price).toFixed(2)}</span
                 >
-
                 <button
                   class="add-btn${inCart ? " added" : ""}"
                   id="btn-${product.id}"
@@ -86,7 +98,7 @@ function displayProducts() {
         `;
       })
       .join("");
-    // Scroll AFTER rendering
+    // .join removes the comas from the product array and transform it into one big string so browser can render it properly.
     setTimeout(() => {
       document.getElementById("new-arrivals-grid").scrollIntoView({
         behavior: "smooth",
@@ -94,7 +106,7 @@ function displayProducts() {
       });
     }, 50);
 
-    //combines all the mapped HTML snippets into one big string so they render correctly inside your cart container.
+    // Updates the text that shows how many products matched the filters. If there's more than one product than add an "S" to the text
     document.getElementById("resultCount").textContent =
       visible + " record" + (visible !== 1 ? "s" : "");
   } catch (error) {
