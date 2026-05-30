@@ -1,24 +1,34 @@
 let cart = [];
 
-// Function to store the cart of the both pages in local storage
-// //so that the cart is the same on both pages and doesn't reset
-// when going to the product page and back to the main page.
+// Function to load the cart from the local storage
+// By doing that, the cart is the same in all of the pages of the website, avoiding purcharse conflicts
+// If there's items on the cart, parse it into an array, or else, keep it as an empty array
 function loadCartFromStorage() {
   const stored = localStorage.getItem("cart");
   cart = stored ? JSON.parse(stored) : [];
 }
 
+// Function to save the cart in the local storage
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 loadCartFromStorage();
 
-// Get ID from URL (?id=3)
+// Get ID from URL (?id=3) - params reads the dynamic data from the URL
+// After reading it, it's used params.get to get the data from the URL and saved it into a variable
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
 let currentProduct = null;
 
+// Function to Load an Specific Product according to its ID
+// First the information of the product is obtained from the back end through fetch
+// Then it saves the product data inside a global variable currentProduct
+// Then the area of the html that will show the product is selected
+// and the the releaseDate field is formatted to be shown in the European way
+// After that the content of the html element is manipulated to show the specific product
+// The cart button continues available on the page in case the customer adds the product to the cart
+// Settimeout is used so when the user clicks in the product detail, the page scrolls smoothly to the information of product after some seconds
 async function loadProduct() {
   try {
     const response = await fetch(`http://localhost:3000/products/${productId}`);
@@ -62,7 +72,7 @@ async function loadProduct() {
           </p>
 
           <p class="detail-release">Release date: ${release}</p>
-        
+
           <button
             class="return-btn ${inCart ? "added" : ""}"
             id="btn-${product.id}"
@@ -70,7 +80,6 @@ async function loadProduct() {
           >
             ${inCart ? "Added" : "Add to Cart"}
           </button>
-          
         </div>
       </div>
     `;
@@ -88,11 +97,15 @@ async function loadProduct() {
   }
 }
 
-// Called when clicking "Add to Cart" on the detail page
+// Function that is called when clicking "Add to Cart" on the detail page
+// First it checks if there are products inside the cart
+// Then it gets the cart from local storage to use updated information
+// Then it checks if current products already exists inside the products array
+// If it doesn't exist it, it will add one of it to the cart array and save it
+// Finally, it will redirect the user to the index.html
 function addToCartFromDetail() {
   if (!currentProduct) return;
 
-  // reload cart in case it changed elsewhere
   loadCartFromStorage();
 
   const exists = cart.find((item) => item.id === currentProduct.id);
@@ -105,6 +118,13 @@ function addToCartFromDetail() {
   window.location.href = "index.html?openCart=1";
 }
 
+// Function to update the cart: first the count variable will store the sum of all the items that are in the cart and return
+// the total number of items in the card
+// Following that, it will select the cart button and the cart couter of items
+// If items to be counted exists, the cart counter will be updated
+// The total will be calculated considering prices * qty and the correspondent html element will be updated
+// Then cartItems element will be selected and if there's no items in the cart a message will be shown
+// And if there are items in the cart the products will be shown according to the html informed
 function updateCart() {
   try {
     loadCartFromStorage();
@@ -169,6 +189,7 @@ function updateCart() {
   }
 }
 
+// Toggle the 'open' class on the cart sidebar to show/hide it
 function toggleCart() {
   const sidebar = document.getElementById("cartSidebar");
   const overlay = document.getElementById("cartOverlay");
@@ -182,6 +203,13 @@ function toggleCart() {
   overlay.classList.toggle("open");
 }
 
+// Function to remove a product from cart: first it uses the filter function with this condition:
+// If the item’s ID is not equal to the product wanted to remove, keep it
+// If the item’s ID matches, remove it
+// Then save the cart and find the button for that specific product, so it can be changed to "Add" text again
+// Following, the specific product data is stored into a variable so its title can be used in the temporary message
+// that informs that the item was sucessfully removed
+// Finnally, calls updateCart function and shows the temporary message
 function removeFromCart(productId) {
   // Remove the product from the cart by filtering it out
   cart = cart.filter((item) => item.id !== productId);
@@ -198,6 +226,7 @@ function removeFromCart(productId) {
   showToast('"' + currentProduct.title + '" removed from cart');
 }
 
+// Function to show temporary messages like "Product Added to the cart" or "Product removed from the cart"
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
@@ -210,6 +239,9 @@ function showToast(message) {
 loadProduct();
 updateCart();
 
+// Proceed to Checkout Button Function: an Event Listener was added to the button and when a click happens
+// It will be checked if there are products in the cart.
+// If there are products in the cart, the user will be redirected to the Checkout Page
 document
   .getElementById("proceedToCheckoutBtn")
   .addEventListener("click", function () {
@@ -223,6 +255,13 @@ document
     window.location.href = "checkout_page.html#checkout-page";
   });
 
+// Function to send the user's newsletter email to the MySQL database
+// First it, selects the input field using the class name from HTML
+// Then it compares the value that was inserted by the user with the Regex of an email address
+// If an invalid email was inserted, a notification message will be shown
+// If a valid email was inserted, then a POST request will be done to the MySQL database using the email informed by the user
+// The fetch function is used to access the server endpoint, together with the method that will be used and the email that will be converted into a string
+// If the operation was successfull or not, an appropriate message will be shown to the user
 function sendNewsletterSubscription() {
   // Finds the input field using the class name from your HTML
   const newsletterInput = document.querySelector(".newsletter-input");

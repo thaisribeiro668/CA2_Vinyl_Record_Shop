@@ -2,21 +2,25 @@ const SHIPPING = 4.5;
 let cart = [];
 let discountApplied = false;
 
-// ── Load cart ──
+// Function to load the cart from the local storage
+// By doing that, the cart is the same in all of the pages of the website, avoiding purcharse conflicts
+// If there's items on the cart, parse it into an array, or else, keep it as an empty array
 function loadCartFromStorage() {
   const stored = localStorage.getItem("cart");
   cart = stored ? JSON.parse(stored) : [];
 }
 
+// Function to save the cart in the local storage
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+// After the order is placed, the cart needs to be emptied from local storage as well
 function clearCart() {
   localStorage.removeItem("cart");
 }
 
-// ── Render order items ──
+// Render order items //
 function renderOrder() {
   loadCartFromStorage();
   const layout = document.getElementById("checkoutLayout");
@@ -74,7 +78,7 @@ function renderOrder() {
   updateTotals();
 }
 
-// ── Totals ──
+// Totals
 function updateTotals() {
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const grand = subtotal + SHIPPING;
@@ -88,7 +92,7 @@ function updateTotals() {
   if (grandEl) grandEl.textContent = "€" + grand.toFixed(2);
 }
 
-// ── Payment tabs ──
+// Payment tabs
 function selectTab(btn, type) {
   document
     .querySelectorAll(".pay-tab")
@@ -102,7 +106,7 @@ function selectTab(btn, type) {
     type === "bank" ? "block" : "none";
 }
 
-// ── Card formatting ──
+// Card formatting
 function formatCard(element) {
   let cardNumber = element.value.replace(/\D/g, "").substring(0, 16);
   element.value = cardNumber.replace(/(.{4})/g, "$1 ").trim();
@@ -204,7 +208,7 @@ function formValidation() {
   return true;
 }
 
-// ── Place order ──
+// Place order
 async function placeOrder() {
   if (!formValidation()) return;
 
@@ -261,7 +265,7 @@ async function placeOrder() {
   }
 }
 
-// ── Toast ──
+// Function to show temporary messages like "Product Added to the cart" or "Product removed from the cart"
 function showToast(msg) {
   let t = document.getElementById("toast");
   if (!t) {
@@ -293,13 +297,14 @@ function showToast(msg) {
   }, 2200);
 }
 
-// Spinner CSS injection helper
-const styleHelper = document.createElement("style");
-styleHelper.textContent =
-  "@keyframes spin { to { transform: rotate(360deg); } }";
-document.head.appendChild(styleHelper);
-
 // ASIDE SIDEBAR LOGIC
+// Function to update the cart: first the count variable will store the sum of all the items that are in the cart and return
+// the total number of items in the card
+// Following that, it will select the cart button and the cart couter of items
+// If items to be counted exists, the cart counter will be updated
+// The total will be calculated considering prices * qty and the correspondent html element will be updated
+// Then cartItems element will be selected and if there's no items in the cart a message will be shown
+// And if there are items in the cart the products will be shown according to the html informed
 function updateCart() {
   try {
     loadCartFromStorage();
@@ -353,6 +358,7 @@ function updateCart() {
   }
 }
 
+// Toggle the 'open' class on the cart sidebar to show/hide it
 function toggleCart() {
   const sidebar = document.getElementById("cartSidebar");
   const overlay = document.getElementById("cartOverlay");
@@ -362,6 +368,13 @@ function toggleCart() {
   }
 }
 
+// Function to remove a product from cart: first it uses the filter function with this condition:
+// If the item’s ID is not equal to the product wanted to remove, keep it
+// If the item’s ID matches, remove it
+// Then save the cart and find the button for that specific product, so it can be changed to "Add" text again
+// Following, the specific product data is stored into a variable so its title can be used in the temporary message
+// that informs that the item was sucessfully removed
+// Finnally, calls updateCart function and shows the temporary message
 function removeFromCart(productId) {
   const removedItem = cart.find((item) => item.id === productId);
   cart = cart.filter((item) => item.id !== productId);
@@ -386,10 +399,16 @@ function updateQty(id, newQty) {
   }
 }
 
-// ── Boot Initialization ──
 renderOrder();
 updateCart();
 
+// Function to send the user's newsletter email to the MySQL database
+// First it, selects the input field using the class name from HTML
+// Then it compares the value that was inserted by the user with the Regex of an email address
+// If an invalid email was inserted, a notification message will be shown
+// If a valid email was inserted, then a POST request will be done to the MySQL database using the email informed by the user
+// The fetch function is used to access the server endpoint, together with the method that will be used and the email that will be converted into a string
+// If the operation was successfull or not, an appropriate message will be shown to the user
 function sendNewsletterSubscription() {
   // Finds the input field using the class name from your HTML
   const newsletterInput = document.querySelector(".newsletter-input");

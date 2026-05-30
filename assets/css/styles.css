@@ -59,7 +59,6 @@ nav {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* justify-content: center; */
 }
 
 .nav-right {
@@ -107,9 +106,7 @@ nav {
     color: var(--red)
 }
 
-
 /* Cart Button on top of the page */
-
 .cart-btn {
     position: absolute;
     top: 2rem;
@@ -207,7 +204,6 @@ nav {
     height: 60%;
     margin-top: 2.5rem;
 }
-
 
 .hero-word {
     font-family: 'DM Sans', sans-serif;
@@ -389,7 +385,6 @@ nav {
     flex: 1;
 }
 
-/* Will be managed by JS */
 .cart-item-title {
     font-family: 'Playfair Display', serif;
     font-size: .9rem;
@@ -423,7 +418,6 @@ nav {
 
 .cart-item-controls {
     display: flex;
-    /* flex-direction: column; */
     align-items: center;
     gap: .5rem;
     margin-top: .3rem;
@@ -567,7 +561,7 @@ nav {
 }
 
 .search-wrap-hidden {
-  display: none;
+    display: none;
 }
 
 .search-icon {
@@ -632,7 +626,6 @@ nav {
     gap: 1.5rem;
 }
 
-/* Manipulated by JS */
 .product-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -689,13 +682,11 @@ nav {
     /* shows the entire image */
 }
 
-
 .hover-hint {
     position: absolute;
     bottom: .6rem;
     right: .6rem;
     background: rgba(26, 22, 18, 0.7);
-    /* your --ink with opacity */
     color: var(--cream);
     font-family: 'DM Mono', monospace;
     font-size: .6rem;
@@ -989,6 +980,7 @@ nav {
     justify-content: center;
     align-items: center;
 }
+
 .product-detail-layout {
     display: grid;
     grid-template-columns: 1.9fr 1.8fr;
@@ -1077,8 +1069,7 @@ nav {
     background: var(--red);
 }
 
-/* ── ABOUT PAGE SPECIFIC STYLES ── */
-
+/* ABOUT PAGE */
 /* Hero */
 .about-hero {
     position: relative;
@@ -1172,7 +1163,7 @@ nav {
     color: var(--cream);
 }
 
-/* ── MAIN CONTENT ── */
+/* MAIN CONTENT */
 .about-main {
     max-width: 1100px;
     margin: 0 auto;
@@ -1321,13 +1312,6 @@ nav {
     align-items: center;
     gap: .75rem;
 }
-
-/* .about-section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    } */
 
 .values-grid {
     display: grid;
@@ -1510,13 +1494,9 @@ nav {
 }
 
 @keyframes pinBounce {
-
-    0%,
-    100% {
+0%, 100% {
         transform: translateY(0);
-    }
-
-    50% {
+    } 50% {
         transform: translateY(-8px);
     }
 }
@@ -1531,7 +1511,7 @@ nav {
     opacity: .7;
 }
 
-/* ── NAV overrides for dark hero ── */
+/* NAV overrides for dark hero */
 .about-page-nav .nav-links a {
     color: var(--cream);
 }
@@ -1545,17 +1525,7 @@ nav {
 }
 
 /* CHECK OUT PAGE */
-/* ── Breadcrumb ── */
-.checkout .hero-vinyl-wrap svg {
-    transform: translateY(-38%) !important;
-    animation: none !important;
-}
-
-.checkout .vinyl-spin {
-    animation: spin 10s linear infinite !important;
-}
-
-
+/* Breadcrumb */
 .checkout-page {
     display: flex;
     flex-direction: column;
@@ -1580,7 +1550,7 @@ nav {
     color: var(--ink);
 }
 
-/* ── Page title ── */
+/* Page title */
 .page-title {
     display: flex;
     flex-direction: column;
@@ -1606,7 +1576,7 @@ nav {
     font-family: var(--font-mono);
 }
 
-/* ── Layout ── */
+/* Layout */
 .checkout-layout {
     display: grid;
     grid-template-columns: 1fr 400px;
@@ -1624,7 +1594,7 @@ nav {
     }
 }
 
-/* ── Section headers ── */
+/* Section headers */
 .section-label {
     font-family: var(--font-mono);
     font-size: .7rem;
@@ -1644,7 +1614,7 @@ nav {
     background: var(--border);
 }
 
-/* ── Form ── */
+/* Form  */
 .form-section {
     margin-bottom: 2.5rem;
 }
@@ -1704,7 +1674,7 @@ select {
     padding-right: 2rem;
 }
 
-/* ── Payment method tabs ── */
+/* Payment method tabs */
 .payment-tabs {
     display: flex;
     gap: .6rem;
@@ -1738,7 +1708,7 @@ select {
     margin-bottom: .25rem;
 }
 
-/* ── Card input row ── */
+/* Card input row  */
 .card-number-wrap {
     position: relative;
 }
@@ -1765,7 +1735,7 @@ select {
     color: var(--ink-muted);
 }
 
-/* ── Order summary (right column) ── */
+/* Order summary (right column) */
 .order-summary {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -1878,7 +1848,7 @@ select {
     color: var(--ink);
 }
 
-/* ── Totals ── */
+/* Totals */
 .totals {
     border-top: 1px solid var(--border);
     padding-top: 1rem;
@@ -1907,7 +1877,7 @@ select {
     letter-spacing: .02em;
 }
 
-/* ── Submit button ── */
+/* Submit button */
 .place-order-btn {
     width: 100%;
     padding: 1rem;
@@ -1941,7 +1911,7 @@ select {
     cursor: not-allowed;
 }
 
-/* ── Empty state ── */
+/* Empty state */
 .empty-checkout {
     text-align: center;
     padding: 4rem 2rem;
@@ -1979,7 +1949,7 @@ select {
     color: var(--bg);
 }
 
-/* ── Success overlay ── */
+/* Success overlay */
 .success-overlay {
     display: none;
     position: fixed;
@@ -2009,9 +1979,7 @@ select {
     from {
         transform: scale(.85);
         opacity: 0;
-    }
-
-    to {
+    } to {
         transform: scale(1);
         opacity: 1;
     }
@@ -2074,7 +2042,7 @@ select {
     text-transform: uppercase;
 }
 
-/* ── Vinyl decoration ── */
+/* Vinyl decoration */
 .vinyl-divider {
     display: flex;
     align-items: center;
